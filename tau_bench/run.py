@@ -24,12 +24,81 @@ def run(config: RunConfig) -> List[EnvRunResult]:
     assert config.agent_strategy in ["tool-calling", "act", "react", "few-shot"], "Invalid agent strategy"
     assert config.task_split in ["train", "test", "dev"], "Invalid task split"
     assert config.user_strategy in [item.value for item in UserStrategy], "Invalid user strategy"
+    assert config.temperature == 1.0, "gpt-5-mini requires temperature=1.0"
 
     random.seed(config.seed)
-    time_str = datetime.now().strftime("%m%d%H%M%S")
-    ckpt_path = f"{config.log_dir}/{config.agent_strategy}-{config.model.split('/')[-1]}-{config.temperature}_range_{config.start_index}-{config.end_index}_user-{config.user_model}-{config.user_strategy}_{time_str}.json"
     if not os.path.exists(config.log_dir):
         os.makedirs(config.log_dir)
+
+    # Checkpoint 路徑：resume 模式用穩定名稱，否則用時間戳
+    ckpt_base = f"{config.agent_strategy}-{config.model.split('/')[-1]}-{config.temperature}_range_{config.start_index}-{config.end_index}_user-{config.user_model}-{config.user_strategy}"
+    if config.resume:
+        ckpt_path = f"{config.log_dir}/{ckpt_base}_checkpoint.json"
+    else:
+        time_str = datetime.now().strftime("%m%d%H%M%S")
+        ckpt_path = f"{config.log_dir}/{ckpt_base}_{time_str}.json"
+
+    # Resume: 掃描 log_dir 中所有 JSON 檔，載入已完成的 (task_id, trial) 結果
+    existing_results: List[EnvRunResult] = []
+    completed_pairs: set = set()  # {(task_id, trial)}
+
+    if config.resume and os.path.exists(config.log_dir):
+        for fname in sorted(os.listdir(config.log_dir)):
+            if not fname.endswith('.json'):
+                continue
+            fpath = os.path.join(config.log_dir, fname)
+            try:
+                with open(fpath, 'r') as f:
+                    data = json.load(f)
+                if not isinstance(data, list):
+                    continue
+                for item in data:
+                    if not (isinstance(item, dict) and 'task_id' in item and 'trial' in item and 'reward' in item):
+                        continue
+                    pair = (item['task_id'], item['trial'])
+                    if pair not in completed_pairs:
+                        existing_results.append(EnvRunResult(**item))
+                        completed_pairs.add(pair)
+            except Exception:
+                pass
+        if existing_results:
+            n_tasks = len(set(r.task_id for r in existing_results))
+            n_trials_done = len(set(r.trial for r in existing_results))
+            print(f"📂 Resume: 載入 {len(existing_results)} 筆歷史結果 ({n_tasks} tasks × {n_trials_done} trials)")
+            # 預寫入穩定 checkpoint，讓後續增量保存能包含完整歷史
+            with open(ckpt_path, "w") as f:
+                json.dump([r.model_dump() for r in existing_results], f, indent=2)
+
+            # 預先檢查是否所有 (task_id, trial) 都已完成，若是則跳過 env/agent 初始化
+            if n_trials_done >= config.num_trials:
+                # 取得 task 數量（不需要載入整個 env）
+                from tau_bench.envs import get_env as _get_env_for_count
+                _count_env = _get_env_for_count(
+                    config.env,
+                    user_strategy="human",  # 使用 human 策略避免初始化 LLM
+                    user_model=config.user_model,
+                    user_provider=config.user_model_provider,
+                    task_split=config.task_split,
+                )
+                _end = len(_count_env.tasks) if config.end_index == -1 else min(config.end_index, len(_count_env.tasks))
+                _all_pairs = set()
+                for trial_i in range(config.num_trials):
+                    if config.task_ids and len(config.task_ids) > 0:
+                        _idxs = config.task_ids
+                    else:
+                        _idxs = list(range(config.start_index, _end))
+                    for idx in _idxs:
+                        _all_pairs.add((idx, trial_i))
+                _remaining = _all_pairs - completed_pairs
+                if not _remaining:
+                    print(f"\n🎉 所有 {config.num_trials} 個 trial 的 {len(_all_pairs) // config.num_trials} 個 task 已全部完成，無需重新執行")
+                    display_metrics(existing_results)
+                    with open(ckpt_path, "w") as f:
+                        json.dump([r.model_dump() for r in existing_results], f, indent=2)
+                        print(f"\n📄 Results saved to {ckpt_path}\n")
+                    return existing_results
+                else:
+                    print(f"📋 尚有 {len(_remaining)} 個 (task, trial) 組合待完成")
 
     print(f"Loading user with strategy: {config.user_strategy}")
     env = get_env(
@@ -47,7 +116,7 @@ def run(config: RunConfig) -> List[EnvRunResult]:
     end_index = (
         len(env.tasks) if config.end_index == -1 else min(config.end_index, len(env.tasks))
     )
-    results: List[EnvRunResult] = []
+    results: List[EnvRunResult] = list(existing_results)
     lock = multiprocessing.Lock()
     if config.task_ids and len(config.task_ids) > 0:
         print(f"Running tasks {config.task_ids} (checkpoint path: {ckpt_path})")
@@ -55,6 +124,7 @@ def run(config: RunConfig) -> List[EnvRunResult]:
         print(
             f"Running tasks {config.start_index} to {end_index} (checkpoint path: {ckpt_path})"
     )
+    all_skipped = True
     for i in range(config.num_trials):
         if config.task_ids and len(config.task_ids) > 0:
             idxs = config.task_ids
@@ -62,6 +132,18 @@ def run(config: RunConfig) -> List[EnvRunResult]:
             idxs = list(range(config.start_index, end_index))
         if config.shuffle:
             random.shuffle(idxs)
+
+        # Resume: 跳過此 trial 中已完成的 task
+        if completed_pairs:
+            orig_len = len(idxs)
+            idxs = [idx for idx in idxs if (idx, i) not in completed_pairs]
+            skipped = orig_len - len(idxs)
+            if skipped > 0:
+                print(f"⏭️  Trial {i}: 跳過 {skipped} 個已完成 task，剩餘 {len(idxs)} 個")
+        if not idxs:
+            print(f"✅ Trial {i}: 全部已完成，跳過")
+            continue
+        all_skipped = False
 
         def _run(idx: int) -> EnvRunResult:
             isolated_env = get_env(
@@ -112,6 +194,9 @@ def run(config: RunConfig) -> List[EnvRunResult]:
         with ThreadPoolExecutor(max_workers=config.max_concurrency) as executor:
             res = list(executor.map(_run, idxs))
             results.extend(res)
+
+    if all_skipped and existing_results:
+        print(f"\n🎉 所有 {config.num_trials} 個 trial 的全部 task 已完成，無需重新執行")
 
     display_metrics(results)
 
@@ -181,7 +266,22 @@ def display_metrics(results: List[EnvRunResult]) -> None:
     def is_successful(reward: float) -> bool:
         return (1 - 1e-6) <= reward <= (1 + 1e-6)
 
+    if not results:
+        print("⚠️ 沒有結果可顯示")
+        return
+
     num_trials = len(set([r.trial for r in results]))
+
+    # 檢查每個 task 是否有相同數量的 trial（不均勻時警告）
+    trials_per_task: dict[int, set] = {}
+    for r in results:
+        trials_per_task.setdefault(r.task_id, set()).add(r.trial)
+    trial_counts = [len(t) for t in trials_per_task.values()]
+    min_tc, max_tc = min(trial_counts), max(trial_counts)
+    if min_tc != max_tc:
+        print(f"⚠️ 部分 task 的 trial 數量不一致 (min={min_tc}, max={max_tc})，pass^k 為近似值")
+        print(f"   完整 trial 數={num_trials}，共 {len(trials_per_task)} 個 task")
+
     rewards = [r.reward for r in results]
     avg_reward = sum(rewards) / len(rewards)
     # c from https://arxiv.org/pdf/2406.12045
@@ -198,6 +298,7 @@ def display_metrics(results: List[EnvRunResult]) -> None:
             sum_task_pass_hat_k += comb(c, k) / comb(num_trials, k)
         pass_hat_ks[k] = sum_task_pass_hat_k / len(c_per_task_id)
     print(f"🏆 Average reward: {avg_reward}")
+    print(f"📊 Total results: {len(results)} ({len(c_per_task_id)} tasks × {num_trials} trials)")
     print("📈 Pass^k")
     for k, pass_hat_k in pass_hat_ks.items():
         print(f"  k={k}: {pass_hat_k}")

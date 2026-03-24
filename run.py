@@ -7,6 +7,23 @@ from litellm import provider_list
 from tau_bench.envs.user import UserStrategy
 
 
+REQUIRED_TEMPERATURE = 1.0
+
+
+def parse_required_temperature(value: str) -> float:
+    """GPT-5-mini 僅允許 temperature=1。"""
+    try:
+        temperature = float(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("temperature 必須是數字") from exc
+
+    if temperature != REQUIRED_TEMPERATURE:
+        raise argparse.ArgumentTypeError(
+            f"gpt-5-mini 只支援 temperature={REQUIRED_TEMPERATURE:g}"
+        )
+    return temperature
+
+
 def parse_args() -> RunConfig:
     parser = argparse.ArgumentParser()
     parser.add_argument("--num-trials", type=int, default=1)
@@ -27,7 +44,7 @@ def parse_args() -> RunConfig:
     parser.add_argument(
         "--user-model",
         type=str,
-        default="gpt-4o",
+        default="gpt-5-mini",
         help="The model to use for the user simulator",
     )
     parser.add_argument(
@@ -44,9 +61,9 @@ def parse_args() -> RunConfig:
     )
     parser.add_argument(
         "--temperature",
-        type=float,
-        default=0.0,
-        help="The sampling temperature for the action model",
+        type=parse_required_temperature,
+        default=REQUIRED_TEMPERATURE,
+        help="The sampling temperature for the action model (gpt-5-mini requires 1)",
     )
     parser.add_argument(
         "--task-split",
@@ -69,6 +86,7 @@ def parse_args() -> RunConfig:
     parser.add_argument("--shuffle", type=int, default=0)
     parser.add_argument("--user-strategy", type=str, default="llm", choices=[item.value for item in UserStrategy])
     parser.add_argument("--few-shot-displays-path", type=str, help="Path to a jsonlines file containing few shot displays")
+    parser.add_argument("--resume", action="store_true", default=False, help="Resume from existing checkpoint JSON files in log-dir")
     args = parser.parse_args()
     print(args)
     return RunConfig(
@@ -90,6 +108,7 @@ def parse_args() -> RunConfig:
         shuffle=args.shuffle,
         user_strategy=args.user_strategy,
         few_shot_displays_path=args.few_shot_displays_path,
+        resume=args.resume,
     )
 
 

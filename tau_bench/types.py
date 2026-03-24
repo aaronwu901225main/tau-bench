@@ -73,11 +73,11 @@ class RunConfig(BaseModel):
     model_provider: str
     user_model_provider: str
     model: str
-    user_model: str = "gpt-4o"
+    user_model: str = "gpt-5-mini"
     num_trials: int = 1
     env: str = "retail"
     agent_strategy: str = "tool-calling"
-    temperature: float = 0.0
+    temperature: float = 1.0
     task_split: str = "test"
     start_index: int = 0
     end_index: int = -1
@@ -88,3 +88,4 @@ class RunConfig(BaseModel):
     shuffle: int = 0
     user_strategy: str = "llm"
     few_shot_displays_path: Optional[str] = None
+    resume: bool = False

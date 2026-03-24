@@ -1,7 +1,6 @@
 # Copyright Sierra
 
 import json
-from litellm import completion
 
 from tau_bench.agents.base import Agent
 from tau_bench.envs.base import Env
@@ -12,6 +11,7 @@ from tau_bench.types import (
     RESPOND_ACTION_FIELD_NAME,
 )
 from typing import Optional, List, Dict, Any, Tuple
+from tau_bench.litellm_retry import completion_with_retry
 
 
 class ChatReActAgent(Agent):
@@ -37,7 +37,7 @@ class ChatReActAgent(Agent):
     def generate_next_step(
         self, messages: List[Dict[str, Any]]
     ) -> Tuple[Dict[str, Any], Action, float]:
-        res = completion(
+        res = completion_with_retry(
             model=self.model,
             custom_llm_provider=self.provider,
             messages=messages,

@@ -2,12 +2,12 @@
 
 import json
 import random
-from litellm import completion
 from typing import List, Optional, Dict, Any
 
 from tau_bench.agents.base import Agent
 from tau_bench.envs.base import Env
 from tau_bench.types import SolveResult, Action, RESPOND_ACTION_NAME
+from tau_bench.litellm_retry import completion_with_retry
 
 
 class FewShotToolCallingAgent(Agent):
@@ -47,7 +47,7 @@ class FewShotToolCallingAgent(Agent):
             {"role": "user", "content": obs},
         ]
         for _ in range(max_num_steps):
-            res = completion(
+            res = completion_with_retry(
                 messages=messages,
                 model=self.model,
                 custom_llm_provider=self.provider,
