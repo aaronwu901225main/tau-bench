@@ -2,9 +2,85 @@
 
 import abc
 import enum
+from pathlib import Path
 
 from typing import Optional, List, Dict, Any, Union
 from tau_bench.litellm_retry import completion_with_retry
+
+
+LOCALES_DIR = Path(__file__).resolve().parents[1] / "locales"
+
+
+DEFAULT_LLM_USER_SYSTEM_PROMPT = """You are a user interacting with an agent.{instruction_display}
+Rules:
+- Just generate one line at a time to simulate the user's message.
+- Do not give away all the instruction at once. Only provide the information that is necessary for the current step.
+- Do not hallucinate information that is not provided in the instruction. For example, if the agent asks for the order id but it is not mentioned in the instruction, do not make up an order id, just say you do not remember or have it.
+- If the instruction goal is satisified, generate '###STOP###' as a standalone message without anything else to end the conversation.
+- Do not repeat the exact instruction in the conversation. Instead, use your own words to convey the same information.
+- Try to make the conversation as natural as possible, and stick to the personalities in the instruction."""
+
+
+DEFAULT_REACT_USER_SYSTEM_PROMPT = """You are a user interacting with an agent.{instruction_display}
+Rules:
+- First, generate a Thought about what to do next (this message will not be sent to the agent).
+- Then, generate a one line User Response to simulate the user's message (this message will be sent to the agent).
+- Do not give away all the instruction at once. Only provide the information that is necessary for the current step.
+- Do not hallucinate information that is not provided in the instruction. For example, if the agent asks for the order id but it is not mentioned in the instruction, do not make up an order id, just say you do not remember or have it.
+- If the instruction goal is satisified, generate '###STOP###' as the User Response without anything else to end the conversation.
+- Do not repeat the exact instruction in the conversation. Instead, use your own words to convey the same information.
+- Try to make the conversation as natural as possible, and stick to the personalities in the instruction.
+
+Format:
+
+Thought:
+<the thought>
+
+User Response:
+<the user response (this will be parsed and sent to the agent)>"""
+
+
+DEFAULT_VERIFY_PROMPT = """You are a supervisor of the Agent in the conversation. You are given a Transcript of a conversation between a Customer and an Agent. The Customer has generated a Response, and you need to verify if it is satisfactory (true) or not (false).
+Your answer will be parsed, so do not include any other text than the classification (true or false).
+
+# Transcript:
+{transcript}
+
+# Response:
+{response}
+
+-----
+
+Classification:"""
+
+
+DEFAULT_REFLECT_PROMPT = """You are a supervisor of the Agent in the conversation. You are given a Transcript of a conversation between a (simulated) Customer and an Agent. The Customer generated a Response that was marked as unsatisfactory by you.
+You need to generate a Reflection on what went wrong in the conversation, and propose a new Response that should fix the issues.
+Your answer will be parsed, so do not include any other text than the classification (true or false).
+
+# Transcript:
+{transcript}
+
+# Response:
+{response}
+
+# Format:
+
+Reflection:
+<the reflection>
+
+Response:
+<the response (this will be parsed and sent to the agent)>"""
+
+
+def _load_shared_prompt(locale: str, file_name: str, default_text: str) -> str:
+    if locale == "en":
+        return default_text
+    prompt_path = LOCALES_DIR / locale / "shared" / file_name
+    if not prompt_path.exists():
+        return default_text
+    content = prompt_path.read_text(encoding="utf-8").strip()
+    return content if content else default_text
 
 
 class BaseUserSimulationEnv(abc.ABC):
@@ -35,11 +111,12 @@ class HumanUserSimulationEnv(BaseUserSimulationEnv):
 
 
 class LLMUserSimulationEnv(BaseUserSimulationEnv):
-    def __init__(self, model: str, provider: str) -> None:
+    def __init__(self, model: str, provider: str, locale: str = "en") -> None:
         super().__init__()
         self.messages: List[Dict[str, Any]] = []
         self.model = model
         self.provider = provider
+        self.locale = locale
         self.total_cost = 0.0
         self.reset()
 
@@ -58,14 +135,12 @@ class LLMUserSimulationEnv(BaseUserSimulationEnv):
             if instruction is not None
             else ""
         )
-        return f"""You are a user interacting with an agent.{instruction_display}
-Rules:
-- Just generate one line at a time to simulate the user's message.
-- Do not give away all the instruction at once. Only provide the information that is necessary for the current step.
-- Do not hallucinate information that is not provided in the instruction. For example, if the agent asks for the order id but it is not mentioned in the instruction, do not make up an order id, just say you do not remember or have it.
-- If the instruction goal is satisified, generate '###STOP###' as a standalone message without anything else to end the conversation.
-- Do not repeat the exact instruction in the conversation. Instead, use your own words to convey the same information.
-- Try to make the conversation as natural as possible, and stick to the personalities in the instruction."""
+        template = _load_shared_prompt(
+            locale=self.locale,
+            file_name="llm_user_system_prompt.txt",
+            default_text=DEFAULT_LLM_USER_SYSTEM_PROMPT,
+        )
+        return template.replace("{instruction_display}", instruction_display)
 
     def reset(self, instruction: Optional[str] = None) -> str:
         self.messages = [
@@ -86,8 +161,8 @@ Rules:
 
 
 class ReactUserSimulationEnv(LLMUserSimulationEnv):
-    def __init__(self, model: str, provider: str) -> None:
-        super().__init__(model=model, provider=provider)
+    def __init__(self, model: str, provider: str, locale: str = "en") -> None:
+        super().__init__(model=model, provider=provider, locale=locale)
         self.reset()
 
     def build_system_prompt(self, instruction: Optional[str]) -> str:
@@ -96,23 +171,12 @@ class ReactUserSimulationEnv(LLMUserSimulationEnv):
             if instruction is not None
             else ""
         )
-        return f"""You are a user interacting with an agent.{instruction_display}
-Rules:
-- First, generate a Thought about what to do next (this message will not be sent to the agent).
-- Then, generate a one line User Response to simulate the user's message (this message will be sent to the agent).
-- Do not give away all the instruction at once. Only provide the information that is necessary for the current step.
-- Do not hallucinate information that is not provided in the instruction. For example, if the agent asks for the order id but it is not mentioned in the instruction, do not make up an order id, just say you do not remember or have it.
-- If the instruction goal is satisified, generate '###STOP###' as the User Response without anything else to end the conversation.
-- Do not repeat the exact instruction in the conversation. Instead, use your own words to convey the same information.
-- Try to make the conversation as natural as possible, and stick to the personalities in the instruction.
-
-Format:
-
-Thought:
-<the thought>
-
-User Response:
-<the user response (this will be parsed and sent to the agent)>"""
+        template = _load_shared_prompt(
+            locale=self.locale,
+            file_name="react_user_system_prompt.txt",
+            default_text=DEFAULT_REACT_USER_SYSTEM_PROMPT,
+        )
+        return template.replace("{instruction_display}", instruction_display)
 
     def generate_next_message(self, messages: List[Dict[str, Any]]) -> str:
         res = completion_with_retry(
@@ -154,10 +218,17 @@ User Response:
 
 
 class VerifyUserSimulationEnv(LLMUserSimulationEnv):
-    def __init__(self, model: str, provider: str, max_attempts: int = 3) -> None:
+    def __init__(
+        self,
+        model: str,
+        provider: str,
+        max_attempts: int = 3,
+        locale: str = "en",
+    ) -> None:
         self.model = model
         self.provider = provider
         self.max_attempts = max_attempts
+        self.locale = locale
         self.reset()
 
     def generate_next_message(self, messages: List[Dict[str, Any]]) -> str:
@@ -169,7 +240,7 @@ class VerifyUserSimulationEnv(LLMUserSimulationEnv):
             )
             cur_message = res.choices[0].message
             self.total_cost = res._hidden_params["response_cost"]
-            if verify(self.model, self.provider, cur_message, messages):
+            if verify(self.model, self.provider, cur_message, messages, locale=self.locale):
                 self.messages.append(cur_message.model_dump())
                 return cur_message.content
             attempts += 1
@@ -194,36 +265,37 @@ class VerifyUserSimulationEnv(LLMUserSimulationEnv):
         return self.total_cost
 
 
-def map_role_label(role: str) -> str:
+def map_role_label(role: str, locale: str = "en") -> str:
     if role == "user":
-        return "Customer"
+        return "客戶" if locale == "zh-TW" else "Customer"
     elif role == "assistant":
-        return "Agent"
+        return "客服" if locale == "zh-TW" else "Agent"
     else:
         return role.capitalize()
 
 
 def verify(
-    model: str, provider: str, response: str, messages: List[Dict[str, Any]]
+    model: str,
+    provider: str,
+    response: str,
+    messages: List[Dict[str, Any]],
+    locale: str = "en",
 ) -> bool:
     transcript = "\n".join(
         [
-            f"{map_role_label(message['role'])}: {message['content']}"
+            f"{map_role_label(message['role'], locale=locale)}: {message['content']}"
             for message in messages
         ]
     )
-    prompt = f"""You are a supervisor of the Agent in the conversation. You are given a Transcript of a conversation between a Customer and an Agent. The Customer has generated a Response, and you need to verify if it is satisfactory (true) or not (false).
-Your answer will be parsed, so do not include any other text than the classification (true or false).
-    
-# Transcript:
-{transcript}
-
-# Response:
-{response}
-
------
-
-Classification:"""
+    prompt_template = _load_shared_prompt(
+        locale=locale,
+        file_name="verify_prompt.txt",
+        default_text=DEFAULT_VERIFY_PROMPT,
+    )
+    prompt = (
+        prompt_template.replace("{transcript}", transcript)
+        .replace("{response}", response)
+    )
     res = completion_with_retry(
         model=model,
         custom_llm_provider=provider,
@@ -233,31 +305,27 @@ Classification:"""
 
 
 def reflect(
-    model: str, provider: str, response: str, messages: List[Dict[str, Any]]
+    model: str,
+    provider: str,
+    response: str,
+    messages: List[Dict[str, Any]],
+    locale: str = "en",
 ) -> str:
     transcript = "\n".join(
         [
-            f"{map_role_label(message['role'])}: {message['content']}"
+            f"{map_role_label(message['role'], locale=locale)}: {message['content']}"
             for message in messages
         ]
     )
-    prompt = f"""You are a supervisor of the Agent in the conversation. You are given a Transcript of a conversation between a (simulated) Customer and an Agent. The Customer generated a Response that was marked as unsatisfactory by you.
-You need to generate a Reflection on what went wrong in the conversation, and propose a new Response that should fix the issues.
-Your answer will be parsed, so do not include any other text than the classification (true or false).
-    
-# Transcript:
-{transcript}
-
-# Response:
-{response}
-
-# Format:
-
-Reflection:
-<the reflection>
-
-Response:
-<the response (this will be parsed and sent to the agent)>"""
+    prompt_template = _load_shared_prompt(
+        locale=locale,
+        file_name="reflect_prompt.txt",
+        default_text=DEFAULT_REFLECT_PROMPT,
+    )
+    prompt = (
+        prompt_template.replace("{transcript}", transcript)
+        .replace("{response}", response)
+    )
     res = completion_with_retry(
         model=model,
         custom_llm_provider=provider,
@@ -268,25 +336,32 @@ Response:
 
 
 class ReflectionUserSimulationEnv(LLMUserSimulationEnv):
-    def __init__(self, model: str, provider: str, max_attempts: int = 2) -> None:
+    def __init__(
+        self,
+        model: str,
+        provider: str,
+        max_attempts: int = 2,
+        locale: str = "en",
+    ) -> None:
         self.model = model
         self.provider = provider
         self.max_attempts = max_attempts
+        self.locale = locale
         self.reset()
 
     def generate_next_message(self, messages: List[Dict[str, Any]]) -> str:
         cur_messages = messages.copy()
         initial_response = super().generate_next_message(cur_messages)
-        if verify(self.model, self.provider, initial_response, cur_messages):
+        if verify(self.model, self.provider, initial_response, cur_messages, locale=self.locale):
             return initial_response
         attempts = 1
         while attempts < self.max_attempts:
             new_message = reflect(
-                self.model, self.provider, initial_response, cur_messages
+                self.model, self.provider, initial_response, cur_messages, locale=self.locale
             )
             cur_messages.append({"role": "user", "content": new_message})
             new_response = super().generate_next_message(cur_messages)
-            if verify(self.model, self.provider, new_response, cur_messages):
+            if verify(self.model, self.provider, new_response, cur_messages, locale=self.locale):
                 return new_response
             attempts += 1
         return initial_response
@@ -321,6 +396,7 @@ def load_user(
     user_strategy: Union[str, UserStrategy],
     model: Optional[str] = "gpt-4o",
     provider: Optional[str] = None,
+    locale: str = "en",
 ) -> BaseUserSimulationEnv:
     if isinstance(user_strategy, str):
         user_strategy = UserStrategy(user_strategy)
@@ -331,23 +407,23 @@ def load_user(
             raise ValueError("LLM user strategy requires a model")
         if provider is None:
             raise ValueError("LLM user strategy requires a model provider")
-        return LLMUserSimulationEnv(model=model, provider=provider)
+        return LLMUserSimulationEnv(model=model, provider=provider, locale=locale)
     elif user_strategy == UserStrategy.REACT:
         if model is None:
             raise ValueError("React user strategy requires a model")
         if provider is None:
             raise ValueError("React user strategy requires a model provider")
-        return ReactUserSimulationEnv(model=model, provider=provider)
+        return ReactUserSimulationEnv(model=model, provider=provider, locale=locale)
     elif user_strategy == UserStrategy.VERIFY:
         if model is None:
             raise ValueError("Verify user strategy requires a model")
         if provider is None:
             raise ValueError("Verify user strategy requires a model provider")
-        return VerifyUserSimulationEnv(model=model, provider=provider)
+        return VerifyUserSimulationEnv(model=model, provider=provider, locale=locale)
     elif user_strategy == UserStrategy.REFLECTION:
         if model is None:
             raise ValueError("Reflection user strategy requires a model")
         if provider is None:
             raise ValueError("Reflection user strategy requires a model provider")
-        return ReflectionUserSimulationEnv(model=model, provider=provider)
+        return ReflectionUserSimulationEnv(model=model, provider=provider, locale=locale)
     raise ValueError(f"Unknown user strategy {user_strategy}")

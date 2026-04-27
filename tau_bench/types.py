@@ -79,6 +79,7 @@ class RunConfig(BaseModel):
     agent_strategy: str = "tool-calling"
     temperature: float = 1.0
     task_split: str = "test"
+    locale: str = "en"
     start_index: int = 0
     end_index: int = -1
     task_ids: Optional[List[int]] = None

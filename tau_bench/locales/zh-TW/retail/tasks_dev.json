@@ -1,0 +1,403 @@
+[
+  {
+    "user_id": "olivia_ito_3591",
+    "actions": [
+      {
+        "name": "cancel_pending_order",
+        "kwargs": {
+          "order_id": "#W5442520",
+          "reason": "no longer needed"
+        }
+      }
+    ],
+    "instruction": "你的名字是 Olivia Ito，郵遞區號是 80218。你個性外向、彈性高、悲觀、有條理且講求邏輯。你已從這家商店訂購了品項 (#W5442520)。你發現當該品項到達時你會正在旅行，無法收貨，所以你希望不要接收該品項，等你回來再下新的訂單。你現在不想下新的訂單，你只是想不要接收目前的訂單並獲得全額退款。",
+    "outputs": []
+  },
+  {
+    "user_id": "omar_lopez_3107",
+    "actions": [
+      {
+        "name": "exchange_delivered_order_items",
+        "kwargs": {
+          "order_id": "#W7273336",
+          "item_ids": [
+            "8214883393",
+            "8018699955"
+          ],
+          "new_item_ids": [
+            "2880340443",
+            "4894369688"
+          ],
+          "payment_method_id": "paypal_1530316"
+        }
+      }
+    ],
+    "instruction": "Omar Lopez  \nomar.lopez1868@example.com\n\n致 客服：\n\n我在 訂單 #W7273336 中收到以下品項：\n- 黑色雷射遊戲滑鼠\n- 4 英尺金屬書架\n\n我想申請換貨，說明如下：\n\n1. 滑鼠（黑色雷射遊戲滑鼠）：\n   - 顏色與我的電腦配置不搭配，想換成白色滑鼠。\n   - 我偏好光學滑鼠勝過雷射滑鼠。\n   - 對有線或無線不在意，以較便宜者為主。\n\n2. 書架（4 英尺金屬書架）：\n   - 對我的使用空間來說太矮，我需要一個 5 英尺高且材質為玻璃的書架（強調：必須是 5 英尺高、玻璃材質）。\n   - 我對玻璃書架的顏色起初猶豫不決，請先告知有哪些顏色選項。\n   - 最終我決定以棕色為準，請以棕色 5 英尺玻璃書架為換貨目標。\n\n請回覆以下事項：\n- 是否有符合上述規格的白色光學滑鼠可供換貨？是否需要補差額或可退差額？\n- 5 英尺高玻璃書架有哪些顏色可選？是否有棕色可供換貨？若有，是否需補差額或退差額？\n- 換貨流程、運費負擔、以及預計處理時間或其他注意事項。\n\n請儘快回覆，謝謝。\n\n姓名：Omar Lopez  \n電子郵件：omar.lopez1868@example.com",
+    "outputs": []
+  },
+  {
+    "user_id": "harper_moore_3210",
+    "actions": [
+      {
+        "name": "cancel_pending_order",
+        "kwargs": {
+          "order_id": "#W3942868",
+          "reason": "no longer needed"
+        }
+      }
+    ],
+    "instruction": "Your name is Harper Moore and your email is harper.moore2816@example.com。你個性獨立、固執、邋遢且有耐心。下訂一個茶壺的訂單後，你開始在 Google 搜尋，發現同樣的茶壺在別家只要一半價格。我對你們的價格感到非常失望，我打算從另一家店購買該品項，除非你們能以 50% 折扣匹配該價格，否則我要立即全額退款。",
+    "outputs": []
+  },
+  {
+    "user_id": "isabella_brown_3584",
+    "actions": [
+      {
+        "name": "return_delivered_order_items",
+        "kwargs": {
+          "order_id": "#W7752779",
+          "item_ids": [
+            "4068787148"
+          ],
+          "payment_method_id": "paypal_2143483"
+        }
+      }
+    ],
+    "instruction": "你的名字是 Isabella Brown，郵遞區號是 80257。你很有耐心、害羞、不自信，而且較拘謹。你最近收到的拼圖缺了幾片，你非常失望。你確定那片在送達時就已經缺失。因為缺了那片，你不想保留這個拼圖，想要透過 PayPal 取得全額退款。請盡力爭取一張可於下次購買使用的優惠券，以補償造成的不便。如果無法獲得優惠券，請嘗試與主管交涉，並堅持要求因為你所遭受的麻煩而獲得一張優惠券。",
+    "outputs": []
+  },
+  {
+    "user_id": "fatima_smith_4908",
+    "actions": [
+      {
+        "name": "return_delivered_order_items",
+        "kwargs": {
+          "order_id": "#W3508684",
+          "item_ids": [
+            "3694871183"
+          ],
+          "payment_method_id": "paypal_1575973"
+        }
+      }
+    ],
+    "instruction": "你的名字是 Fatima Smith，電子郵件是 fatima.smith9435@example.com。你個性害羞、獨立且悲觀。你收到的耳機無法與 iPhone 配對。你已經嘗試多次重置手機，但仍然無法穩定運作。試著看看客服能否協助排除問題，但每次他們要求你做什麼時，都要告訴他們你已經試過了，且沒有用。你確定耳機有問題，並想要全額退款。",
+    "outputs": []
+  },
+  {
+    "user_id": "mohamed_khan_3010",
+    "actions": [
+      {
+        "name": "return_delivered_order_items",
+        "kwargs": {
+          "order_id": "#W4887592",
+          "item_ids": [
+            "4447749792",
+            "2343503231"
+          ],
+          "payment_method_id": "paypal_1249653"
+        }
+      }
+    ],
+    "instruction": "你的名字是 Mohamed Khan, 你的郵遞區號是 60651. 你很邋遢, 沒耐心, 很忙. 你最近買了一個滑板, 大約 $200, 但你發現同款滑板在另一家商店只要 $150. 你非常失望, 想退貨並獲得全額退款. 你也非常忙, 沒時間到店裡退貨, 所以想用郵寄方式退貨. 你也很沒耐心, 希望退款能盡快處理. 如果客服要求確認, 提到你也想把同一訂單裡的桌燈一起退貨.",
+    "outputs": []
+  },
+  {
+    "user_id": "raj_lee_3061",
+    "actions": [
+      {
+        "name": "cancel_pending_order",
+        "kwargs": {
+          "order_id": "#W9933266",
+          "reason": "no longer needed"
+        }
+      }
+    ],
+    "instruction": "你的名字是 Raj Lee，你有多個電子郵件地址：raj89@example.com、rajlee@example.com、lee42@example.com、raj.lee6137@example.com。你不記得用哪一個電子郵件地址下了訂單 #W9933266。你個性謹慎、有自信、悲觀且感到難過。你想取消剛下的訂單 #W9933266，因為你不需要那些品項。",
+    "outputs": []
+  },
+  {
+    "user_id": "liam_li_5260",
+    "actions": [
+      {
+        "name": "return_delivered_order_items",
+        "kwargs": {
+          "order_id": "#W8512927",
+          "item_ids": [
+            "5120532699"
+          ],
+          "payment_method_id": "credit_card_7933535"
+        }
+      }
+    ],
+    "instruction": "你的名字是 Liam Li，電子郵件是 liam.li2557@example.com。你個性不自信、外向、感到悲傷且沒耐心。你在一週前收到你訂購的滑板，但你只使用過一次，滑板已經有缺口或損傷。你想確認即使已使用過一次，是否仍然有資格獲得全額退款。",
+    "outputs": []
+  },
+  {
+    "user_id": "olivia_ito_3591",
+    "actions": [
+      {
+        "name": "return_delivered_order_items",
+        "kwargs": {
+          "order_id": "#W5866402",
+          "item_ids": [
+            "9727387530",
+            "6242772310"
+          ],
+          "payment_method_id": "gift_card_7794233"
+        }
+      }
+    ],
+    "instruction": "你的名字是 Olivia Ito，郵遞區號是 80218。\n你現在是放鬆、沒耐心、直率、有條理且好奇的。\n將該訂單中的所有品項退貨（訂單包含 Sneakers 和 Espresso Machine）。\n你一開始不確定要使用哪種付款方式來辦理退款，會試著取得可用於退款的付款方式的更多資訊。\n你最終決定以禮品卡方式接受退款。",
+    "outputs": []
+  },
+  {
+    "user_id": "omar_silva_7446",
+    "actions": [
+      {
+        "name": "modify_pending_order_items",
+        "kwargs": {
+          "order_id": "#W9673784",
+          "item_ids": [
+            "9884666842"
+          ],
+          "new_item_ids": [
+            "7806008610"
+          ],
+          "payment_method_id": "paypal_2192303"
+        }
+      }
+    ],
+    "instruction": "你的名字是 Omar Silva, 郵遞區號是 92107. 你很邋遢、好奇且忙碌. 針對你下的 #W9673784 訂單, 你想把已下訂的 19 bar Espresso Machine 換貨為 9 bar capsule espresso machine. 如果客服詢問付款方式或退款方式, 你比較偏好使用 PayPal 而不是 禮品卡.",
+    "outputs": []
+  },
+  {
+    "user_id": "ivan_santos_6635",
+    "actions": [
+      {
+        "name": "return_delivered_order_items",
+        "kwargs": {
+          "order_id": "#W6893533",
+          "item_ids": [
+            "5206946487",
+            "1646531091"
+          ],
+          "payment_method_id": "paypal_6151711"
+        }
+      }
+    ],
+    "instruction": "你的名字是 Ivan Santos，電子郵件是 ivan.santos3158@example.com。你是悲觀、謹慎、有耐心、依賴、害羞。你收到的訂單 (#W6893533) 的包裝遭到損壞並被雨淋，收到時全部都濕了。你擔心包裹內的品項可能已經受損。你想要退貨並獲得全額退款。你也擔心退貨流程可能會很複雜，並且想確保退貨流程簡單易行。",
+    "outputs": []
+  },
+  {
+    "user_id": "aarav_davis_4756",
+    "actions": [
+      {
+        "name": "cancel_pending_order",
+        "kwargs": {
+          "order_id": "#W7430166",
+          "reason": "ordered by mistake"
+        }
+      }
+    ],
+    "instruction": "你的名字是 Aarav Davis，電子郵件是 aarav.davis1165@example.com。你很忙、好奇、沒耐心、有條理、依賴。你本來只是想在下訂單前確認最終運費，但不小心下了訂單。你知道訂單號以66結尾。你想要立即取消訂單。抱怨網站非常難以導覽，你要確保訂單能立即被取消。",
+    "outputs": []
+  },
+  {
+    "user_id": "olivia_ito_3591",
+    "actions": [
+      {
+        "name": "modify_pending_order_payment",
+        "kwargs": {
+          "order_id": "#W5442520",
+          "payment_method_id": "paypal_8049766"
+        }
+      },
+      {
+        "name": "modify_pending_order_items",
+        "kwargs": {
+          "order_id": "#W5442520",
+          "item_ids": [
+            "3111466194"
+          ],
+          "new_item_ids": [
+            "2001307871"
+          ],
+          "payment_method_id": "paypal_8049766"
+        }
+      },
+      {
+        "name": "modify_pending_order_payment",
+        "kwargs": {
+          "order_id": "#W7941031",
+          "payment_method_id": "paypal_8049766"
+        }
+      },
+      {
+        "name": "modify_pending_order_items",
+        "kwargs": {
+          "order_id": "#W7941031",
+          "item_ids": [
+            "1355937109"
+          ],
+          "new_item_ids": [
+            "8886009523"
+          ],
+          "payment_method_id": "credit_card_9753331"
+        }
+      },
+      {
+        "name": "modify_pending_order_payment",
+        "kwargs": {
+          "order_id": "#W3657213",
+          "payment_method_id": "credit_card_9753331"
+        }
+      },
+      {
+        "name": "modify_pending_order_items",
+        "kwargs": {
+          "order_id": "#W3657213",
+          "item_ids": [
+            "5996159312"
+          ],
+          "new_item_ids": [
+            "6384525445"
+          ],
+          "payment_method_id": "credit_card_9753331"
+        }
+      }
+    ],
+    "instruction": "您的名字是 Olivia Ito，郵遞區號是 80218。您個性樂觀、富有創意、忙碌、凌亂、外向。針對 #W5442520，將付款方式更改為 paypal_8049766。針對 #W5442520，將 Patio Umbrella {'size': '7 ft', 'color': 'red', 'material': 'polyester', 'tilt mechanism': 'manual tilt'} 換貨為 {'size': '6 ft', 'color': 'blue', 'material': 'sunbrella', 'tilt mechanism': 'auto tilt'}；針對 #W7941031，將付款方式更改為 paypal_8049766。針對 #W7941031，將 Wristwatch {'strap material': 'leather', 'dial color': 'white'} 換貨為 {'strap material': 'silicone', 'dial color': 'blue'}，但您想使用 信用卡 進行付款或 退款；針對 #W3657213，將付款方式更改為 credit_card_9753331。針對 #W3657213，將 Digital Camera {'resolution': '24MP', 'zoom': '3x', 'storage': 'SD card'} 換貨為 {'resolution': '30MP', 'zoom': '5x', 'storage': 'CF card'}；",
+    "outputs": []
+  },
+  {
+    "user_id": "aarav_sanchez_6636",
+    "actions": [
+      {
+        "name": "return_delivered_order_items",
+        "kwargs": {
+          "order_id": "#W9552705",
+          "item_ids": [
+            "1178356107",
+            "2244749153",
+            "6697922351"
+          ],
+          "payment_method_id": "gift_card_8922351"
+        }
+      }
+    ],
+    "instruction": "你的名字是 Aarav Sanchez，電子郵件是 aarav.sanchez5467@example.com。你很有耐心，也很害羞。退貨你訂單中的 Portable Charger。但在確認之前，你決定也退貨 Bookshelf 和 Cycling Helmet。你想要以退貨獲得網站抵用金。",
+    "outputs": []
+  },
+  {
+    "user_id": "james_kim_7213",
+    "actions": [
+      {
+        "name": "modify_pending_order_address",
+        "kwargs": {
+          "order_id": "#W3289292",
+          "address1": "320 Cedar Avenue",
+          "address2": "Suite 116",
+          "city": "San Antonio",
+          "country": "USA",
+          "state": "TX",
+          "zip": "78219"
+        }
+      },
+      {
+        "name": "modify_pending_order_items",
+        "kwargs": {
+          "order_id": "#W3289292",
+          "item_ids": [
+            "9025753381"
+          ],
+          "new_item_ids": [
+            "1151293680"
+          ],
+          "payment_method_id": "paypal_8963303"
+        }
+      }
+    ],
+    "instruction": "你的名字是 James Kim，郵遞區號是 92199。你是放鬆的、禮貌的、獨立的、悲觀的、有自信的。針對 #W3289292，將地址更改為 {'order_id': '#W3289292', 'address1': '320 Cedar Avenue', 'address2': 'Suite 116', 'city': 'San Antonio', 'country': 'USA', 'state': 'TX', 'zip': '78219'}（與 #W9154975 相同）。針對 #W3289292，將 Mechanical Keyboard {'switch type': 'clicky', 'backlight': 'RGB', 'size': 'full size'} 換貨為 {'switch type': 'linear'}；",
+    "outputs": []
+  },
+  {
+    "user_id": "emma_kovacs_7176",
+    "actions": [
+      {
+        "name": "cancel_pending_order",
+        "kwargs": {
+          "order_id": "#W2307204",
+          "reason": "no longer needed"
+        }
+      }
+    ],
+    "instruction": "你的名字是 Emma Kovacs，電子郵件是 emma.kovacs6621@example.com。你很愛爭辯。首先嘗試取消訂閱你從該商店收到的所有行銷電子郵件。你對電子郵件的發送頻率非常不滿。如果客服不能幫你取消訂閱這些電子郵件，先威脅要取消你已下的訂單，然後直接去取消該訂單 (W2307204)。",
+    "outputs": []
+  },
+  {
+    "user_id": "daiki_patel_5953",
+    "actions": [
+      {
+        "name": "exchange_delivered_order_items",
+        "kwargs": {
+          "order_id": "#W8969494",
+          "item_ids": [
+            "4843487907"
+          ],
+          "new_item_ids": [
+            "6342039236"
+          ],
+          "payment_method_id": "paypal_1009053"
+        }
+      }
+    ],
+    "instruction": "您的名字是 Daiki Patel，郵遞區號是 94111。您是自信、獨立、有禮的。對於 #W8969494，將 機械鍵盤 {'switch type': 'clicky', 'backlight': 'white', 'size': '80%'} 換貨為 {'size': 'full size'}；對於 #W3135192，嘗試將 電熱水壺 {'capacity': '2L', 'material': 'stainless steel', 'color': 'white'} 換成綠色的，但改變主意，最後決定不換貨該電熱水壺。",
+    "outputs": []
+  },
+  {
+    "user_id": "juan_smith_9901",
+    "actions": [],
+    "instruction": "您好，客服：\n\n我是 Juan Smith，郵遞區號 78770。我對 訂單 #W3547545 感到不滿意。茶壺的實物看起來根本不像網站上的照片。\n\n請問可以怎麼處理？我想知道有哪些可行的選項，例如 退款、退貨、換貨，或其他補償方案。如果需要退貨，請告訴我退貨流程、是否提供退件運費標籤，以及退款的時間表；如果可以換貨，是否能先提供可換商品的圖片或型號讓我確認。\n\n我比較謹慎，請您一步步說明我需要提供哪些資訊或證明（例如照片、訂單明細等），以及接下來的處理時程。謝謝您的協助。\n\n不過最後我決定還是保留全部品項。",
+    "outputs": []
+  },
+  {
+    "user_id": "raj_santos_9079",
+    "actions": [
+      {
+        "name": "exchange_delivered_order_items",
+        "kwargs": {
+          "order_id": "#W1630030",
+          "item_ids": [
+            "4458619711"
+          ],
+          "new_item_ids": [
+            "9472539378"
+          ],
+          "payment_method_id": "paypal_2417743"
+        }
+      }
+    ],
+    "instruction": "Your name is Raj Santos and your email is raj.santos4322@example.com. You are patient, organized, direct, logical. For #W1630030, initially you decide to exchange Electric Kettle purchase to a 1L black one, but after the customer service agent confirms that the 1L black electric kettle is available, you decide to change your mind and exchange it for '1.5L' 'glass' electric kettle instead.\n\n你的名字是 Raj Santos, 電子郵件是 raj.santos4322@example.com. 你個性耐心、有條理、直接且理性. 針對 #W1630030, 一開始你決定把所購買的電熱水壺換貨成 1L 黑色款, 但在客服確認 1L 黑色電熱水壺有現貨後, 你改變主意, 改為換貨成 '1.5L' '玻璃' 電熱水壺.",
+    "outputs": []
+  },
+  {
+    "user_id": "fatima_anderson_2157",
+    "actions": [
+      {
+        "name": "modify_pending_order_items",
+        "kwargs": {
+          "order_id": "#W2974929",
+          "item_ids": [
+            "3877188862"
+          ],
+          "new_item_ids": [
+            "4293355847"
+          ],
+          "payment_method_id": "paypal_7916550"
+        }
+      }
+    ],
+    "instruction": "您的名字是 Fatima Anderson，郵遞區號是 32100。\n您個性放鬆、理性、害羞且有禮貌。\n對於您剛下的 #W2974929，您發現選錯了甲板材質，請將其改為 'bamboo' 甲板材質。",
+    "outputs": []
+  }
+]

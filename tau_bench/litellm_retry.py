@@ -19,6 +19,17 @@ def _get_int_env(name: str, default: int) -> int:
     return max(1, parsed)
 
 
+def _get_non_negative_int_env(name: str, default: int) -> int:
+    value = os.getenv(name)
+    if value is None:
+        return default
+    try:
+        parsed = int(value)
+    except ValueError:
+        return default
+    return max(0, parsed)
+
+
 def _get_float_env(name: str, default: float) -> float:
     value = os.getenv(name)
     if value is None:
@@ -72,8 +83,16 @@ def is_retryable_litellm_error(exc: Exception) -> bool:
     return False
 
 
+def is_header_contamination_error(exc: Exception) -> bool:
+    return "unexpected tokens remaining in message header" in str(exc).lower()
+
+
 def completion_with_retry(**kwargs: Any):
     max_attempts = _get_int_env("TAU_LITELLM_MAX_ATTEMPTS", 5)
+    # 0 means no limit for this specific error type.
+    header_max_attempts = _get_non_negative_int_env(
+        "TAU_LITELLM_HEADER_MAX_ATTEMPTS", 0
+    )
     base_backoff = _get_float_env("TAU_LITELLM_RETRY_BACKOFF", 1.5)
     max_backoff = _get_float_env("TAU_LITELLM_RETRY_MAX_BACKOFF", 20.0)
 
@@ -82,15 +101,32 @@ def completion_with_retry(**kwargs: Any):
         try:
             return completion(**kwargs)
         except Exception as exc:
-            can_retry = is_retryable_litellm_error(exc)
-            if (not can_retry) or attempt >= max_attempts:
+            is_header_error = is_header_contamination_error(exc)
+            can_retry = is_header_error or is_retryable_litellm_error(exc)
+
+            effective_max_attempts = (
+                header_max_attempts if is_header_error and header_max_attempts > 0 else max_attempts
+            )
+            max_attempts_reached = (
+                False
+                if is_header_error and header_max_attempts == 0
+                else attempt >= effective_max_attempts
+            )
+
+            if (not can_retry) or max_attempts_reached:
                 raise
 
-            backoff = min(max_backoff, base_backoff * (2 ** (attempt - 1)))
+            exponent = min(attempt - 1, 10)
+            backoff = min(max_backoff, base_backoff * (2 ** exponent))
             jitter = random.uniform(0, 0.2 * max(1.0, backoff))
             sleep_seconds = backoff + jitter
+            limit_display = (
+                "inf"
+                if is_header_error and header_max_attempts == 0
+                else str(effective_max_attempts)
+            )
             print(
-                f"[LiteLLMRetry] attempt {attempt}/{max_attempts} failed with "
+                f"[LiteLLMRetry] attempt {attempt}/{limit_display} failed with "
                 f"{exc.__class__.__name__}: {exc}. retrying in {sleep_seconds:.2f}s..."
             )
             time.sleep(sleep_seconds)

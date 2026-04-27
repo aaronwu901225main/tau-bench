@@ -17,6 +17,11 @@ from litellm import provider_list
 from tau_bench.envs.user import UserStrategy
 
 
+def is_gpt_5_mini(model_name: str) -> bool:
+    normalized = model_name.strip().lower()
+    return normalized == "gpt-5-mini" or normalized.endswith("/gpt-5-mini")
+
+
 def run(config: RunConfig) -> List[EnvRunResult]:
     assert config.env in ["retail", "airline"], "Only retail and airline envs are supported"
     assert config.model_provider in provider_list, "Invalid model provider"
@@ -24,14 +29,15 @@ def run(config: RunConfig) -> List[EnvRunResult]:
     assert config.agent_strategy in ["tool-calling", "act", "react", "few-shot"], "Invalid agent strategy"
     assert config.task_split in ["train", "test", "dev"], "Invalid task split"
     assert config.user_strategy in [item.value for item in UserStrategy], "Invalid user strategy"
-    assert config.temperature == 1.0, "gpt-5-mini requires temperature=1.0"
+    if is_gpt_5_mini(config.model):
+        assert config.temperature == 1.0, "gpt-5-mini requires temperature=1.0"
 
     random.seed(config.seed)
     if not os.path.exists(config.log_dir):
         os.makedirs(config.log_dir)
 
     # Checkpoint 路徑：resume 模式用穩定名稱，否則用時間戳
-    ckpt_base = f"{config.agent_strategy}-{config.model.split('/')[-1]}-{config.temperature}_range_{config.start_index}-{config.end_index}_user-{config.user_model}-{config.user_strategy}"
+    ckpt_base = f"{config.agent_strategy}-{config.model.split('/')[-1]}-{config.temperature}_range_{config.start_index}-{config.end_index}_user-{config.user_model}-{config.user_strategy}_locale-{config.locale}"
     if config.resume:
         ckpt_path = f"{config.log_dir}/{ckpt_base}_checkpoint.json"
     else:
@@ -79,6 +85,7 @@ def run(config: RunConfig) -> List[EnvRunResult]:
                     user_model=config.user_model,
                     user_provider=config.user_model_provider,
                     task_split=config.task_split,
+                    locale=config.locale,
                 )
                 _end = len(_count_env.tasks) if config.end_index == -1 else min(config.end_index, len(_count_env.tasks))
                 _all_pairs = set()
@@ -107,11 +114,13 @@ def run(config: RunConfig) -> List[EnvRunResult]:
         user_model=config.user_model,
         user_provider=config.user_model_provider,
         task_split=config.task_split,
+        locale=config.locale,
     )
     agent = agent_factory(
         tools_info=env.tools_info,
         wiki=env.wiki,
         config=config,
+        locale=config.locale,
     )
     end_index = (
         len(env.tasks) if config.end_index == -1 else min(config.end_index, len(env.tasks))
@@ -153,6 +162,7 @@ def run(config: RunConfig) -> List[EnvRunResult]:
                 task_split=config.task_split,
                 user_provider=config.user_model_provider,
                 task_index=idx,
+                locale=config.locale,
             )
 
             print(f"Running task {idx}")
@@ -207,7 +217,7 @@ def run(config: RunConfig) -> List[EnvRunResult]:
 
 
 def agent_factory(
-    tools_info: List[Dict[str, Any]], wiki, config: RunConfig
+    tools_info: List[Dict[str, Any]], wiki, config: RunConfig, locale: str = "en"
 ) -> Agent:
     if config.agent_strategy == "tool-calling":
         # native tool calling
@@ -231,6 +241,7 @@ def agent_factory(
             provider=config.model_provider,
             use_reasoning=False,
             temperature=config.temperature,
+            locale=locale,
         )
     elif config.agent_strategy == "react":
         # `react` from https://arxiv.org/abs/2210.03629
@@ -243,6 +254,7 @@ def agent_factory(
             provider=config.model_provider,
             use_reasoning=True,
             temperature=config.temperature,
+            locale=locale,
         )
     elif config.agent_strategy == "few-shot":
         from tau_bench.agents.few_shot_agent import FewShotToolCallingAgent

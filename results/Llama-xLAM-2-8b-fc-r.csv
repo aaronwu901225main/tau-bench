@@ -1,0 +1,5 @@
+model,env,locale,strategy,avg_reward,pass_k1,pass_k2,pass_k3,pass_k4,status
+Llama-xLAM-2-8b-fc-r,retail,zh-TW,tool-calling,0.3108695652173913,0.3108695652173913,0.1608695652173913,0.10434782608695652,0.0782608695652174,ok
+Llama-xLAM-2-8b-fc-r,retail,en,tool-calling,0.5521739130434783,0.5521739130434783,0.39275362318840573,0.3,0.23478260869565218,ok
+Llama-xLAM-2-8b-fc-r,airline,zh-TW,tool-calling,0.27,0.27,0.14,0.08,0.04,ok
+Llama-xLAM-2-8b-fc-r,airline,en,tool-calling,0.385,0.385,0.2333333333333333,0.165,0.12,ok

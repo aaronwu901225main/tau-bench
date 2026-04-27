@@ -90,4 +90,4 @@ def message_to_action(
             kwargs=json.loads(tool_call["function"]["arguments"]),
         )
     else:
-        return Action(name=RESPOND_ACTION_NAME, kwargs={"content": message["content"]})
+        return Action(name=RESPOND_ACTION_NAME, kwargs={"content": message.get("content") or ""})

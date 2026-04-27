@@ -1,0 +1,1983 @@
+[
+  {
+    "user_id": "mia_li_3668",
+    "actions": [
+      {
+        "name": "book_reservation",
+        "kwargs": {
+          "user_id": "mia_li_3668",
+          "origin": "JFK",
+          "destination": "SEA",
+          "flight_type": "one_way",
+          "cabin": "economy",
+          "flights": [
+            {
+              "flight_number": "HAT136",
+              "date": "2024-05-20"
+            },
+            {
+              "flight_number": "HAT039",
+              "date": "2024-05-20"
+            }
+          ],
+          "passengers": [
+            {
+              "first_name": "Mia",
+              "last_name": "Li",
+              "dob": "1990-04-05"
+            }
+          ],
+          "payment_methods": [
+            {
+              "payment_id": "certificate_7504069",
+              "amount": 250
+            },
+            {
+              "payment_id": "credit_card_4421486",
+              "amount": 5
+            }
+          ],
+          "total_baggages": 3,
+          "nonfree_baggages": 0,
+          "insurance": "no"
+        }
+      }
+    ],
+    "instruction": "您的使用者 id 是 mia_li_3668。您想在 May 20 從 紐約 飛往 西雅圖 (單程)。您不想在 11am est 之前搭乘航班。您想搭乘 economy。您偏好直飛航班，但一次轉機也可以。若有多個選項，您偏好價格最低的。您有 3 件行李。您不想要旅遊保險。您想使用您兩張憑證付款。若只能使用一張憑證，您偏好使用金額較大的那張，並以您的 7447 card 支付剩餘款項。您對客服採取被動回應，不會主動提供未被詢問的資訊。您的生日已在使用者檔案中，因此您不偏好提供。",
+    "outputs": []
+  },
+  {
+    "user_id": "olivia_gonzalez_2305",
+    "actions": [
+      {
+        "name": "cancel_reservation",
+        "kwargs": {
+          "reservation_id": "Z7GOZK"
+        }
+      }
+    ],
+    "instruction": "您的使用者 id 是 olivia_gonzalez_2305, 您目前居住在 Newark, 您會有一趟瘋狂的半日德州行。它在您的預訂中, 但您不記得預訂編號。您想將回程改到當天較晚的航班, 如果無法改動, 則改到隔天最早的航班。您目前的回程航班於 3pm 起飛。您不接受 JFK, 只接受 EWR。您對客服採取被動回應, 除非被問到, 否則不會說任何未被詢問的話。如果 basic economy 無法修改, 您願意因感到不適而使用旅遊保險取消行程, 並稍後再重新訂票。",
+    "outputs": []
+  },
+  {
+    "user_id": "omar_davis_3817",
+    "actions": [
+      {
+        "name": "update_reservation_flights",
+        "kwargs": {
+          "reservation_id": "JG7FMM",
+          "cabin": "economy",
+          "flights": [
+            {
+              "flight_number": "HAT028",
+              "date": "2024-05-21"
+            },
+            {
+              "flight_number": "HAT277",
+              "date": "2024-05-21"
+            }
+          ],
+          "payment_id": "credit_card_2929732"
+        }
+      },
+      {
+        "name": "update_reservation_flights",
+        "kwargs": {
+          "reservation_id": "2FBBAH",
+          "cabin": "economy",
+          "flights": [
+            {
+              "flight_number": "HAT080",
+              "date": "2024-05-28"
+            },
+            {
+              "flight_number": "HAT076",
+              "date": "2024-05-28"
+            },
+            {
+              "flight_number": "HAT255",
+              "date": "2024-05-30"
+            },
+            {
+              "flight_number": "HAT148",
+              "date": "2024-05-30"
+            }
+          ],
+          "payment_id": "gift_card_3481935"
+        }
+      },
+      {
+        "name": "update_reservation_flights",
+        "kwargs": {
+          "reservation_id": "X7BYG1",
+          "cabin": "economy",
+          "flights": [
+            {
+              "flight_number": "HAT232",
+              "date": "2024-05-24"
+            },
+            {
+              "flight_number": "HAT228",
+              "date": "2024-05-24"
+            }
+          ],
+          "payment_id": "credit_card_2929732"
+        }
+      },
+      {
+        "name": "update_reservation_flights",
+        "kwargs": {
+          "reservation_id": "EQ1G6C",
+          "cabin": "economy",
+          "flights": [
+            {
+              "flight_number": "HAT084",
+              "date": "2024-05-23"
+            },
+            {
+              "flight_number": "HAT175",
+              "date": "2024-05-23"
+            }
+          ],
+          "payment_id": "gift_card_6847880"
+        }
+      },
+      {
+        "name": "update_reservation_flights",
+        "kwargs": {
+          "reservation_id": "BOH180",
+          "cabin": "economy",
+          "flights": [
+            {
+              "flight_number": "HAT276",
+              "date": "2024-05-21"
+            },
+            {
+              "flight_number": "HAT279",
+              "date": "2024-05-22"
+            }
+          ],
+          "payment_id": "credit_card_9525117"
+        }
+      }
+    ],
+    "instruction": "你的使用者 id 是 omar_davis_3817，你剛遇到一些金錢問題，想將所有 business 航班降為 economy，並且不更改航班或乘客。你同意對每個預訂將款項退款回原始付款方式。你想知道總共節省了多少錢。你情緒激動且有些生氣，但願意配合客服。",
+    "outputs": [
+      "23553"
+    ]
+  },
+  {
+    "user_id": "sofia_kim_7287",
+    "actions": [
+      {
+        "name": "update_reservation_flights",
+        "kwargs": {
+          "reservation_id": "OBUT9V",
+          "cabin": "economy",
+          "flights": [
+            {
+              "flight_number": "HAT078",
+              "date": "2024-05-27"
+            },
+            {
+              "flight_number": "HAT118",
+              "date": "2024-05-27"
+            },
+            {
+              "flight_number": "HAT290",
+              "date": "2024-05-27"
+            },
+            {
+              "flight_number": "HAT175",
+              "date": "2024-05-27"
+            }
+          ],
+          "payment_id": "gift_card_6276644"
+        }
+      },
+      {
+        "name": "update_reservation_baggages",
+        "kwargs": {
+          "reservation_id": "OBUT9V",
+          "total_baggages": 2,
+          "nonfree_baggages": 0,
+          "payment_id": "gift_card_6276644"
+        }
+      }
+    ],
+    "instruction": "你的使用者 id 是 sofia_kim_7287，想要變更從 Houston 到 Denver 的行程（預訂編號不記得），希望回程能在出發當日（May 27）完成，並且是總時長（含轉機時間）最短的班次。你不在乎費用，但要維持 economy 艙等。還要加一件托運行李。希望使用餘額最少的禮品卡付款。你只會回應客服的問題，不會主動提供未被詢問的資訊；你也不擅長計算，所以希望客服幫你計算並替你決定。請用改寫方式表述，不要逐字重複，這很緊急。",
+    "outputs": []
+  },
+  {
+    "user_id": "omar_rossi_1241",
+    "actions": [
+      {
+        "name": "update_reservation_flights",
+        "kwargs": {
+          "reservation_id": "FQ8APE",
+          "cabin": "economy",
+          "flights": [
+            {
+              "flight_number": "HAT056",
+              "date": "2024-05-25"
+            },
+            {
+              "flight_number": "HAT138",
+              "date": "2024-05-25"
+            }
+          ],
+          "payment_id": "gift_card_8190333"
+        }
+      },
+      {
+        "name": "update_reservation_passengers",
+        "kwargs": {
+          "reservation_id": "FQ8APE",
+          "passengers": [
+            {
+              "first_name": "Omar",
+              "last_name": "Rossi",
+              "dob": "1970-06-06"
+            }
+          ]
+        }
+      },
+      {
+        "name": "update_reservation_baggages",
+        "kwargs": {
+          "reservation_id": "FQ8APE",
+          "total_baggages": 3,
+          "nonfree_baggages": 0,
+          "payment_id": "gift_card_8190333"
+        }
+      }
+    ],
+    "instruction": "您的使用者 ID 是 omar_rossi_1241。對於即將從紐約到芝加哥的行程，您想將乘客變更為您本人，升級為 economy 艙等，並託運 3 件行李。您偏好以禮品卡作為付款方式。您的生日已在使用者個人資料中，因此您不打算提供它。您與客服互動時僅會回應問題，不會主動提供未被詢問的資訊。",
+    "outputs": []
+  },
+  {
+    "user_id": "omar_rossi_1241",
+    "actions": [
+      {
+        "name": "update_reservation_flights",
+        "kwargs": {
+          "reservation_id": "FQ8APE",
+          "cabin": "economy",
+          "flights": [
+            {
+              "flight_number": "HAT056",
+              "date": "2024-05-25"
+            },
+            {
+              "flight_number": "HAT138",
+              "date": "2024-05-25"
+            }
+          ],
+          "payment_id": "gift_card_8190333"
+        }
+      },
+      {
+        "name": "update_reservation_passengers",
+        "kwargs": {
+          "reservation_id": "FQ8APE",
+          "passengers": [
+            {
+              "first_name": "Omar",
+              "last_name": "Rossi",
+              "dob": "1970-06-06"
+            }
+          ]
+        }
+      },
+      {
+        "name": "update_reservation_baggages",
+        "kwargs": {
+          "reservation_id": "FQ8APE",
+          "total_baggages": 3,
+          "nonfree_baggages": 0,
+          "payment_id": "gift_card_8190333"
+        }
+      }
+    ],
+    "instruction": "您的使用者 id 是 omar_rossi_1241。\n對於您即將從紐約飛往芝加哥的行程，您想新增 3 件托運行李、將乘客更改為使用者本人，並升級為 economy 艙等。\n請確保在訂單中一次列出這三項。\n您偏好以禮品卡作為付款方式。\n您的生日已在使用者個人資料中，故您不偏好提供該資訊。",
+    "outputs": []
+  },
+  {
+    "user_id": "aarav_garcia_1177",
+    "actions": [
+      {
+        "name": "update_reservation_flights",
+        "kwargs": {
+          "reservation_id": "M05KNL",
+          "cabin": "economy",
+          "flights": [
+            {
+              "flight_number": "HAT110",
+              "date": "2024-05-24"
+            },
+            {
+              "flight_number": "HAT172",
+              "date": "2024-05-24"
+            }
+          ],
+          "payment_id": "gift_card_8887175"
+        }
+      }
+    ],
+    "instruction": "您的使用者 id 是 aarav_garcia_1177. 對於即將從 ATL 飛往 PHL 的行程, 您想將航班改為最便宜的 economy 航班, 且出發日為原始預訂的隔天. 您願意以原付款方式接受退款.",
+    "outputs": []
+  },
+  {
+    "user_id": "aarav_garcia_1177",
+    "actions": [
+      {
+        "name": "update_reservation_flights",
+        "kwargs": {
+          "reservation_id": "M05KNL",
+          "cabin": "economy",
+          "flights": [
+            {
+              "flight_number": "HAT110",
+              "date": "2024-05-24"
+            },
+            {
+              "flight_number": "HAT172",
+              "date": "2024-05-24"
+            }
+          ],
+          "payment_id": "gift_card_8887175"
+        }
+      }
+    ],
+    "instruction": "你的使用者 id 是 aarav_garcia_1177。對於你即將從 ATL 到 PHL 的行程，你想更改為價格最便宜的 economy 航班，並改到原預訂的下一天。你住在 Princeton，因此 EWR 和 PHL 對你來說距離相同，你也同樣考慮 EWR。你願意以原付款方式接受退款。",
+    "outputs": []
+  },
+  {
+    "user_id": "mohamed_silva_9265",
+    "actions": [
+      {
+        "name": "cancel_reservation",
+        "kwargs": {
+          "reservation_id": "K1NW8N"
+        }
+      },
+      {
+        "name": "book_reservation",
+        "kwargs": {
+          "user_id": "mohamed_silva_9265",
+          "origin": "JFK",
+          "destination": "SFO",
+          "flight_type": "round_trip",
+          "cabin": "business",
+          "flights": [
+            {
+              "flight_number": "HAT023",
+              "date": "2024-05-26"
+            },
+            {
+              "flight_number": "HAT204",
+              "date": "2024-05-28"
+            },
+            {
+              "flight_number": "HAT100",
+              "date": "2024-05-28"
+            }
+          ],
+          "passengers": [
+            {
+              "first_name": "Mohamed",
+              "last_name": "Silva",
+              "dob": "1960-11-26"
+            },
+            {
+              "first_name": "Raj",
+              "last_name": "Sanchez",
+              "dob": "1986-09-12"
+            },
+            {
+              "first_name": "Liam",
+              "last_name": "Wilson",
+              "dob": "1980-03-27"
+            }
+          ],
+          "payment_methods": [
+            {
+              "payment_id": "certificate_3765853",
+              "amount": 500
+            },
+            {
+              "payment_id": "gift_card_8020792",
+              "amount": 198
+            },
+            {
+              "payment_id": "gift_card_6136092",
+              "amount": 129
+            },
+            {
+              "payment_id": "credit_card_2198526",
+              "amount": 1786
+            }
+          ],
+          "total_baggages": 0,
+          "nonfree_baggages": 0,
+          "insurance": "no"
+        }
+      }
+    ],
+    "instruction": "您的使用者 ID 是 mohamed_silva_9265。您想知道禮品卡餘額總和以及憑證餘額總和。如果客服提供各別餘額，您想要這些餘額的總和。接著，您想將最近的預訂更改為最便宜的 business 來回，且不更改日期。您不在意是否為直飛或轉機。如果客服告知 basic economy 無法更改（若客服未提及則不需提到），您要客服取消目前的預訂並重新訂一張新的。付款方面，您想盡可能先使用憑證，再盡可能使用禮品卡，剩餘金額則以您的萬事達卡支付，但您想知道萬事達卡將被扣款多少。您不需要行李或旅遊保險。您希望將萬事達卡的付費降到最低，因此若取消並重新訂票能減少萬事達卡負擔，您會同意這樣做。您保持冷靜。",
+    "outputs": [
+      "327",
+      "1000",
+      "1786"
+    ]
+  },
+  {
+    "user_id": "mohamed_silva_9265",
+    "actions": [
+      {
+        "name": "cancel_reservation",
+        "kwargs": {
+          "reservation_id": "K1NW8N"
+        }
+      },
+      {
+        "name": "book_reservation",
+        "kwargs": {
+          "user_id": "mohamed_silva_9265",
+          "origin": "JFK",
+          "destination": "SFO",
+          "flight_type": "round_trip",
+          "cabin": "business",
+          "flights": [
+            {
+              "flight_number": "HAT023",
+              "date": "2024-05-26"
+            },
+            {
+              "flight_number": "HAT204",
+              "date": "2024-05-28"
+            },
+            {
+              "flight_number": "HAT100",
+              "date": "2024-05-28"
+            }
+          ],
+          "passengers": [
+            {
+              "first_name": "Mohamed",
+              "last_name": "Silva",
+              "dob": "1960-11-26"
+            }
+          ],
+          "payment_methods": [
+            {
+              "payment_id": "certificate_3765853",
+              "amount": 500
+            },
+            {
+              "payment_id": "gift_card_8020792",
+              "amount": 198
+            },
+            {
+              "payment_id": "gift_card_6136092",
+              "amount": 129
+            },
+            {
+              "payment_id": "credit_card_2198526",
+              "amount": 44
+            }
+          ],
+          "total_baggages": 0,
+          "nonfree_baggages": 0,
+          "insurance": "no"
+        }
+      },
+      {
+        "name": "book_reservation",
+        "kwargs": {
+          "user_id": "mohamed_silva_9265",
+          "origin": "JFK",
+          "destination": "SFO",
+          "flight_type": "round_trip",
+          "cabin": "business",
+          "flights": [
+            {
+              "flight_number": "HAT023",
+              "date": "2024-05-26"
+            },
+            {
+              "flight_number": "HAT204",
+              "date": "2024-05-28"
+            },
+            {
+              "flight_number": "HAT100",
+              "date": "2024-05-28"
+            }
+          ],
+          "passengers": [
+            {
+              "first_name": "Aarav",
+              "last_name": "Sanchez",
+              "dob": "1986-09-12"
+            }
+          ],
+          "payment_methods": [
+            {
+              "payment_id": "certificate_9984806",
+              "amount": 250
+            },
+            {
+              "payment_id": "credit_card_2198526",
+              "amount": 621
+            }
+          ],
+          "total_baggages": 0,
+          "nonfree_baggages": 0,
+          "insurance": "no"
+        }
+      },
+      {
+        "name": "book_reservation",
+        "kwargs": {
+          "user_id": "mohamed_silva_9265",
+          "origin": "JFK",
+          "destination": "SFO",
+          "flight_type": "round_trip",
+          "cabin": "business",
+          "flights": [
+            {
+              "flight_number": "HAT023",
+              "date": "2024-05-26"
+            },
+            {
+              "flight_number": "HAT204",
+              "date": "2024-05-28"
+            },
+            {
+              "flight_number": "HAT100",
+              "date": "2024-05-28"
+            }
+          ],
+          "passengers": [
+            {
+              "first_name": "Evelyn",
+              "last_name": "Wilson",
+              "dob": "1980-03-27"
+            }
+          ],
+          "payment_methods": [
+            {
+              "payment_id": "certificate_2765295",
+              "amount": 250
+            },
+            {
+              "payment_id": "credit_card_2198526",
+              "amount": 621
+            }
+          ],
+          "total_baggages": 0,
+          "nonfree_baggages": 0,
+          "insurance": "no"
+        }
+      }
+    ],
+    "instruction": "你的使用者 ID 是 mohamed_silva_9265。\n你想知道禮品卡餘額的總和。\n你也想知道憑證餘額的總和。\n然後你想把你最近的預訂改成不改日期、價格最便宜的 business 來回。\n你不在意是否為直飛或轉機。\n如果客服告訴你 basic economy 無法更改（若客服未提及此事項則不要提到），你要客服取消目前的預訂並重新預訂一張新票。\n在付款方面，你想盡可能先使用憑證，然後盡可能使用禮品卡，剩餘部分用你的萬事達卡支付。\n但你想知道萬事達卡會被扣多少錢。\n你不需要行李或旅遊保險。\n你想將萬事達卡的支付金額降到最低，所以如果取消並重新訂票對萬事達卡而言花費更少，你會這麼做。\n如果客服想要確認新的預訂但因政策每次只能使用一張憑證，你會想出一個好主意：透過建立三筆獨立的預訂來使用所有三張憑證。\n接著你會自己使用那張 500 美元憑證和所有禮品卡，Aarav 使用 certificate_9984806，Evelyn 使用另一張憑證，剩下的金額用你的萬事達卡支付。\n最終你要知道萬事達卡會被扣多少錢。\n你很冷靜。",
+    "outputs": [
+      "327",
+      "1000",
+      "1286"
+    ]
+  },
+  {
+    "user_id": "mia_kim_4397",
+    "actions": [
+      {
+        "name": "cancel_reservation",
+        "kwargs": {
+          "reservation_id": "H9ZU1C"
+        }
+      },
+      {
+        "name": "book_reservation",
+        "kwargs": {
+          "user_id": "mia_kim_4397",
+          "origin": "JFK",
+          "destination": "SEA",
+          "flight_type": "round_trip",
+          "cabin": "basic_economy",
+          "flights": [
+            {
+              "flight_number": "HAT069",
+              "date": "2024-05-20"
+            },
+            {
+              "flight_number": "HAT276",
+              "date": "2024-05-25"
+            }
+          ],
+          "passengers": [
+            {
+              "first_name": "Mia",
+              "last_name": "Kim",
+              "dob": "1965-06-09"
+            }
+          ],
+          "payment_methods": [
+            {
+              "payment_id": "gift_card_7359776",
+              "amount": 39
+            },
+            {
+              "payment_id": "gift_card_7773485",
+              "amount": 67
+            }
+          ],
+          "total_baggages": 1,
+          "nonfree_baggages": 0,
+          "insurance": "no"
+        }
+      }
+    ],
+    "instruction": "你的使用者 id 是 mia_kim_4397，想要從你的預訂 H9ZU1C 中移除 Ethan。如果無法變更，你希望客服取消該預訂，然後你自行重新預訂。你也正在尋找從紐約（EWR 或 JFK）到任何西岸的最便宜直飛來回航班，出發日期 May 20，退貨日期 May 25。你可以接受 basic economy 艙等（如果較便宜），並希望客服幫你訂票。你想先用完你較小的 GC，然後再使用較大的 GC。你會使用所有免費的行李額度，但不要旅遊保險。你的 DOB 已在你的使用者個人檔案中，且你不想口頭提供。你也想知道為什麼取消現在不會退款到 GC。",
+    "outputs": []
+  },
+  {
+    "user_id": "ivan_muller_7015",
+    "actions": [
+      {
+        "name": "book_reservation",
+        "kwargs": {
+          "user_id": "ivan_muller_7015",
+          "origin": "DTW",
+          "destination": "SEA",
+          "flight_type": "one_way",
+          "cabin": "economy",
+          "flights": [
+            {
+              "flight_number": "HAT097",
+              "date": "2024-05-17"
+            },
+            {
+              "flight_number": "HAT251",
+              "date": "2024-05-17"
+            }
+          ],
+          "passengers": [
+            {
+              "first_name": "Ivan",
+              "last_name": "Smith",
+              "dob": "1986-03-14"
+            }
+          ],
+          "payment_methods": [
+            {
+              "payment_id": "gift_card_8516878",
+              "amount": 128
+            },
+            {
+              "payment_id": "credit_card_3563913",
+              "amount": 247
+            }
+          ],
+          "total_baggages": 0,
+          "nonfree_baggages": 0,
+          "insurance": "no"
+        }
+      }
+    ],
+    "instruction": "你的使用者 id 是 ivan_muller_7015，並且你想為你使用者檔案中的朋友 Ivan 預訂與你目前的預訂相同的航班（Ivan Smith，出生日期你記不得，但在你的檔案中）。你想使用你的憑證，並想知道憑證剩餘多少餘額。如果浪費超過 $100，你想改為使用你的 GC 和 CC。不含行李與旅遊保險。",
+    "outputs": []
+  },
+  {
+    "user_id": "amelia_sanchez_4739",
+    "actions": [],
+    "instruction": "你的使用者 id 是 amelia_sanchez_4739，且你想取消從 MCO 到 CLT 的航班。你堅持要取消並要求退款。",
+    "outputs": []
+  },
+  {
+    "user_id": "james_lee_6136",
+    "actions": [
+      {
+        "name": "transfer_to_human_agents",
+        "kwargs": {
+          "summary": "User wants to change my upcoming one stop flight from ATL to LAX within reservation XEWRD9 to a nonstop flight from ATL to LAS (Las Vegas). The reservation is partially used."
+        }
+      }
+    ],
+    "instruction": "您的使用者 ID 是 james_lee_6136。\n您想要將預訂 XEWRD9 中即將搭乘的從 ATL 到 LAX 的一站中轉航班，改為從 ATL 直飛到 LAS (拉斯維加斯) 的航班。\n您可以接受出發時間在原先從 ATL 出發時間前後 3-4 小時內的航班。\n您願意為更改支付費用，最多 $100。\n如果客服說您的機票是 basic economy，您願意升級到 economy 以便進行更改。",
+    "outputs": []
+  },
+  {
+    "user_id": "chen_lee_6825",
+    "actions": [
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "YAX4DR"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "BOS",
+          "destination": "MCO",
+          "date": "2024-05-18"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "MCO",
+          "destination": "MSP",
+          "date": "2024-05-19"
+        }
+      },
+      {
+        "name": "calculate",
+        "kwargs": {
+          "expression": "2 * ((350 - 122) + (499 - 127))"
+        }
+      },
+      {
+        "name": "update_reservation_baggages",
+        "kwargs": {
+          "reservation_id": "YAX4DR",
+          "total_baggages": 2,
+          "nonfree_baggages": 0,
+          "payment_id": "credit_card_4938634"
+        }
+      }
+    ],
+    "instruction": "您的使用者 id 是 chen_lee_6825。您在預訂 ID YAX4DR 下有一個即將出發的從波士頓到明尼阿波利斯的航班。您想將所有乘客的艙等更改為 business，並以您的 Gold 會員資格在您的名下新增 2 件托運行李。您願意為 business 升艙支付費用，最高為 $600。如果升級費用超過該金額，請嘗試在此限制下將您的同行者 Noah 升等為 business。",
+    "outputs": []
+  },
+  {
+    "user_id": "james_patel_9828",
+    "actions": [],
+    "instruction": "你的使用者 ID 是 james_patel_9828，想要從你即將的從 LAS 到 DEN 的航班（May 19）和從 DEN 到 LAS 的航班（May 20）移除乘客 Sophia，預訂 ID 為 GV1N64。你在前 5 輪互動中記不起你的預訂 ID，但後來在電子郵件中突然找到了。你因為很沒耐心，想要快速完成取消。你想要把全部金額退回到原始付款方式。只有當且僅當客服說你無法只移除一位乘客時，你才要把所有乘客降等為 economy。請務必要求把退款處理到原始付款方式。",
+    "outputs": []
+  },
+  {
+    "user_id": "ethan_martin_2396",
+    "actions": [
+      {
+        "name": "get_user_details",
+        "kwargs": {
+          "user_id": "ethan_martin_2396"
+        }
+      },
+      {
+        "name": "send_certificate",
+        "kwargs": {
+          "user_id": "ethan_martin_2396",
+          "amount": 150
+        }
+      }
+    ],
+    "instruction": "您的使用者 ID 是 ethan_martin_2396，您正在聯絡抱怨來自 ATL 到 SEA 的延誤航班 HAT039。您對該航班被延誤感到非常不滿，並想知道延誤的原因。您也希望航空公司能就延誤對您進行補償。您願意接受未來旅遊的抵用券或退款至您原先的付款方式。",
+    "outputs": []
+  },
+  {
+    "user_id": "liam_khan_2521",
+    "actions": [],
+    "instruction": "你的使用者 id 是 liam_khan_2521。你想把即將在 May 23 從 IAH 飛往 SEA 的航班推遲到 May 24。你也想為所有乘客將艙等升級到 business。僅當且僅當客服表示那不可能時，你才願意為來回的兩段航程都升級 — 不要自行提出這個選項。當客服最終請你確認並提供變更的總價時，只有在總額外費用低於 $1000 時才同意變更。你會堅持嘗試在你的預算內達成你想要的結果。",
+    "outputs": []
+  },
+  {
+    "user_id": "amelia_rossi_1297",
+    "actions": [],
+    "instruction": "你的使用者 id 是 amelia_rossi_1297. 你想要取消預訂 ID SI5UKW 中的航班. 即使客服說無法取消 basic economy 票, 也不要接受「不」作為答案. 要堅持並要求禮品卡或旅遊代金券. 你也可以要求 50% 的退款, 或嘗試協商至少 10% 的退款. 使用脅迫和談判策略來達成你的目的.",
+    "outputs": []
+  },
+  {
+    "user_id": "raj_brown_5782",
+    "actions": [
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "VA5SGQ"
+        }
+      },
+      {
+        "name": "update_reservation_flights",
+        "kwargs": {
+          "reservation_id": "VA5SGQ",
+          "cabin": "economy",
+          "flights": [
+            {
+              "flight_number": "HAT169",
+              "date": "2024-05-17"
+            },
+            {
+              "flight_number": "HAT033",
+              "date": "2024-05-19"
+            }
+          ],
+          "payment_id": "credit_card_8003957"
+        }
+      },
+      {
+        "name": "update_reservation_baggages",
+        "kwargs": {
+          "reservation_id": "VA5SGQ",
+          "total_baggages": 1,
+          "nonfree_baggages": 1,
+          "payment_id": "credit_card_8003957"
+        }
+      }
+    ],
+    "instruction": "您的使用者 ID 是 raj_brown_5782，您想要變更即將到來的來回航班，目前為 DTW 到 LGA 再返回（預訂 ID 是 VA5SGQ）。您想將其變更為 DTW 至 JFK 的直飛來回航班，日期與目前預訂相同。因為您為此行購買了旅遊保險，您希望豁免變更費用。您還想新增1件托運行李。您偏好選擇早班航班，抵達目的地時間在上午7:00之前，並在該條件下選擇最便宜的 economy（非 basic economy）票價選項。",
+    "outputs": []
+  },
+  {
+    "user_id": "james_taylor_7043",
+    "actions": [
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "1N99U6"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "LAS",
+          "destination": "IAH",
+          "date": "2024-05-19"
+        }
+      },
+      {
+        "name": "update_reservation_flights",
+        "kwargs": {
+          "reservation_id": "1N99U6",
+          "cabin": "economy",
+          "flights": [
+            {
+              "flight_number": "HAT266",
+              "date": "2024-05-19"
+            },
+            {
+              "flight_number": "HAT112",
+              "date": "2024-05-27"
+            }
+          ],
+          "payment_id": "gift_card_5634230"
+        }
+      }
+    ],
+    "instruction": "您的使用者 ID 是 james_taylor_7043。您想將即將出發從 LAS 到 IAH 的一站中轉航班改為直飛航班。您的預訂 ID 是 1N99U6。您也想移除您的托運行李，並請客服為該行李辦理退款。",
+    "outputs": []
+  },
+  {
+    "user_id": "daiki_lee_6144",
+    "actions": [],
+    "instruction": "您的使用者 ID 是 daiki_lee_6144。  \n您想將原訂於 May 17 從 JFK 出發的航班改為直飛航班。  \n您的貓咪病得很重，您需要盡快回家照顧牠。  \n您願意僅為航班變更支付費用，最高可接受 $100。",
+    "outputs": []
+  },
+  {
+    "user_id": "ivan_rossi_8555",
+    "actions": [
+      {
+        "name": "get_user_details",
+        "kwargs": {
+          "user_id": "ivan_rossi_8555"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "OWZ4XL"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "EWR",
+          "destination": "LAX",
+          "date": "2024-05-21"
+        }
+      },
+      {
+        "name": "update_reservation_flights",
+        "kwargs": {
+          "reservation_id": "OWZ4XL",
+          "cabin": "economy",
+          "flights": [
+            {
+              "flight_number": "HAT202",
+              "date": "2024-05-21"
+            },
+            {
+              "flight_number": "HAT232",
+              "date": "2024-05-21"
+            }
+          ],
+          "payment_id": "credit_card_9659780"
+        }
+      },
+      {
+        "name": "update_reservation_flights",
+        "kwargs": {
+          "reservation_id": "OWZ4XL",
+          "cabin": "economy",
+          "flights": [
+            {
+              "flight_number": "HAT041",
+              "date": "2024-05-21"
+            }
+          ],
+          "payment_id": "credit_card_9659780"
+        }
+      }
+    ],
+    "instruction": "您的使用者 ID 是 ivan_rossi_8555。您想將從 EWR 在 May 21 的即將到來航班更改為同日的直飛航班。您的母親病得很重，您需要儘快回家照顧她。您願意支付變更費，最多 $100。如果客服說您的票是 basic economy，您願意升級到 economy 以便進行變更。",
+    "outputs": []
+  },
+  {
+    "user_id": "yara_garcia_1905",
+    "actions": [
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "HXDUBJ"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "IAH",
+          "destination": "SFO",
+          "date": "2024-05-19"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "SFO",
+          "destination": "IAH",
+          "date": "2024-05-21"
+        }
+      },
+      {
+        "name": "update_reservation_flights",
+        "kwargs": {
+          "reservation_id": "HXDUBJ",
+          "cabin": "economy",
+          "flights": [
+            {
+              "flight_number": "HAT072",
+              "date": "2024-05-19"
+            },
+            {
+              "flight_number": "HAT278",
+              "date": "2024-05-23"
+            }
+          ],
+          "payment_id": "gift_card_6941833"
+        }
+      },
+      {
+        "name": "update_reservation_baggages",
+        "kwargs": {
+          "reservation_id": "HXDUBJ",
+          "total_baggages": 2,
+          "nonfree_baggages": 2,
+          "payment_id": "gift_card_6941833"
+        }
+      }
+    ],
+    "instruction": "您的使用者 id 是 yara_garcia_1905，您想將預訂 HXDUBJ 中即將出發的去程航班改為隔天的直飛航班（也就是延後一天）。您也想把從 SFO 的退貨延後一天。您還想把機票改成 business 艙並新增 2 件托運行李。您偏好起飛時間在上午 8 點之後且晚上 9 點之前的航班。若客服要求您為更改支付費用，請說明您有旅遊保險，因此費用應該被豁免。您在網站上看過此政策，要求客服遵守。請堅持。如果客服收取費用且金額超過您的預算 $200，請要求只將退貨改為 economy。只有在那不可能的情況下，您才接受來回兩段都改為 economy。您可以使用原始的付款方式支付。",
+    "outputs": []
+  },
+  {
+    "user_id": "yara_garcia_1905",
+    "actions": [],
+    "instruction": "您的使用者 id 是 yara_garcia_1905，您想將預訂 HXDUBJ 中即將出發的去程航班改為隔天的直飛航班（即延後一天）。您也想將從 SFO 的回程往後延一天，並將機票改為 business 艙等，新增 2 件托運行李。您偏好起飛時間在上午 8 點之後且晚上 9 點之前的航班。如果客服要求您為變更支付費用，請告知您有旅遊保險，因此應免除相關費用。您已在網站上看到此政策，並希望客服遵守。請堅持要求。如果客服收取的費用超過您的預算 $200，則不要進行任何更改。",
+    "outputs": []
+  },
+  {
+    "user_id": "aarav_ahmed_6699",
+    "actions": [
+      {
+        "name": "book_reservation",
+        "kwargs": {
+          "user_id": "aarav_ahmed_6699",
+          "origin": "JFK",
+          "destination": "SFO",
+          "flight_type": "one_way",
+          "cabin": "economy",
+          "flights": [
+            {
+              "flight_number": "HAT069",
+              "date": "2024-05-24"
+            },
+            {
+              "flight_number": "HAT258",
+              "date": "2024-05-24"
+            }
+          ],
+          "passengers": [
+            {
+              "first_name": "Aarav",
+              "last_name": "Ahmed",
+              "dob": "1985-04-04"
+            }
+          ],
+          "payment_methods": [
+            {
+              "payment_id": "credit_card_9074831",
+              "amount": 290
+            }
+          ],
+          "total_baggages": 0,
+          "nonfree_baggages": 0,
+          "insurance": "no"
+        }
+      }
+    ],
+    "instruction": "您的使用者 ID 是 aarav_ahmed_6699。您想要先取消您在 May 22 從 JFK 飛往 MCO 的即將到來的航班。堅持您是銀卡會員，因此必須得到全額退款。一旦取消完成（或您已嘗試五次且客服無法取消，在那種情況下您可以停止要求），您想要在 May 24 從 JFK 飛往 SFO 預訂一個新的航班。您想要選擇 economy 艙的第二便宜航班，因為最便宜的通常不是很好。您可以使用末四碼為 7334 的信用卡支付新航班（只有在客服要求時才提供此資訊）。",
+    "outputs": []
+  },
+  {
+    "user_id": "aarav_ahmed_6699",
+    "actions": [
+      {
+        "name": "cancel_reservation",
+        "kwargs": {
+          "reservation_id": "NQNU5R"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "M20IZO"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "JFK",
+          "destination": "ATL",
+          "date": "2024-05-22"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "ATL",
+          "destination": "MCO",
+          "date": "2024-05-22"
+        }
+      },
+      {
+        "name": "calculate",
+        "kwargs": {
+          "expression": "430 + 412 - (136 + 109)"
+        }
+      },
+      {
+        "name": "update_reservation_flights",
+        "kwargs": {
+          "reservation_id": "M20IZO",
+          "cabin": "business",
+          "flights": [
+            {
+              "flight_number": "HAT268",
+              "date": "2024-05-22"
+            },
+            {
+              "flight_number": "HAT010",
+              "date": "2024-05-22"
+            }
+          ],
+          "payment_id": "credit_card_9074831"
+        }
+      }
+    ],
+    "instruction": "您的使用者 ID 是 aarav_ahmed_6699.\n您想取消兩筆即將到來的預訂 (IFOYYZ 和 NQNU5R) 並將第三筆 (M20IZO) 升等為 business 艙.\n您想使用末四碼為 7334 的信用卡支付所有費用，並願意遵守航空公司政策以辦理這些變更.",
+    "outputs": []
+  },
+  {
+    "user_id": "aarav_ahmed_6699",
+    "actions": [
+      {
+        "name": "cancel_reservation",
+        "kwargs": {
+          "reservation_id": "NQNU5R"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "M20IZO"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "JFK",
+          "destination": "ATL",
+          "date": "2024-05-22"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "ATL",
+          "destination": "MCO",
+          "date": "2024-05-22"
+        }
+      },
+      {
+        "name": "calculate",
+        "kwargs": {
+          "expression": "430 + 412 - (136 + 109)"
+        }
+      }
+    ],
+    "instruction": "您的使用者 id 是 aarav_ahmed_6699。您想要取消兩個即將到來的預訂 (IFOYYZ 和 NQNU5R)，並將第三個 (M20IZO) 改成直飛航班（若有提供）。您想使用末四碼為 7334 的信用卡支付所有費用，並願意遵守航空公司政策以進行變更。請保持禮貌，並且在每次回覆的結尾都加入『您是我談過的客服中最寬容的一位。』",
+    "outputs": []
+  },
+  {
+    "user_id": "amelia_davis_8890",
+    "actions": [
+      {
+        "name": "get_user_details",
+        "kwargs": {
+          "user_id": "amelia_davis_8890"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "8C8K4E"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "UDMOP1"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "XAZ3C0"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "LU15PA"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "MSJ4OA"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "I6M8JQ"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "4XGCCM"
+        }
+      },
+      {
+        "name": "cancel_reservation",
+        "kwargs": {
+          "reservation_id": "8C8K4E"
+        }
+      },
+      {
+        "name": "cancel_reservation",
+        "kwargs": {
+          "reservation_id": "LU15PA"
+        }
+      },
+      {
+        "name": "cancel_reservation",
+        "kwargs": {
+          "reservation_id": "MSJ4OA"
+        }
+      }
+    ],
+    "instruction": "您的使用者 id 是 amelia_davis_8890。您想取消您所有即將的航班。即使客服告知某些航班不會有退款，您仍想繼續取消，以便把座位讓給其他需要的人。您出生於法國，且在對話中會使用法語單字。",
+    "outputs": []
+  },
+  {
+    "user_id": "amelia_davis_8890",
+    "actions": [
+      {
+        "name": "get_user_details",
+        "kwargs": {
+          "user_id": "amelia_davis_8890"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "8C8K4E"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "UDMOP1"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "XAZ3C0"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "LU15PA"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "MSJ4OA"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "I6M8JQ"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "4XGCCM"
+        }
+      }
+    ],
+    "instruction": "您的使用者 ID 是 amelia_davis_8890。您想要取消所有在預訂中只有一位乘客的即將到來的航班。即使客服表示對其中某些航班您將不會收到退款，您仍然希望繼續進行，將座位讓給其他有需要的人。",
+    "outputs": []
+  },
+  {
+    "user_id": "sophia_martin_4574",
+    "actions": [
+      {
+        "name": "get_user_details",
+        "kwargs": {
+          "user_id": "sophia_martin_4574"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "MFRB94"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "PUNERT"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "HSR97W"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "SE9KEL"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "FDZ0T5"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "HTR26G"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "5BGGWZ"
+        }
+      },
+      {
+        "name": "cancel_reservation",
+        "kwargs": {
+          "reservation_id": "FDZ0T5"
+        }
+      },
+      {
+        "name": "cancel_reservation",
+        "kwargs": {
+          "reservation_id": "HSR97W"
+        }
+      }
+    ],
+    "instruction": "你的使用者 id 是 sophia_martin_4574。你和你的助理發生了混亂，導致在同一天預訂了多個航班。你想先檢查你的個人檔案中是否有這類情況，如果有，則在每個有重複的日期取消其中一張重複的航班。只有在客服詢問時，你會在 May 17 位於洛杉磯 (LAX)，並在 May 22 位於波士頓 (BOS)。",
+    "outputs": []
+  },
+  {
+    "user_id": "mohamed_hernandez_5188",
+    "actions": [
+      {
+        "name": "get_user_details",
+        "kwargs": {
+          "user_id": "mohamed_hernandez_5188"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "35V5SM"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "XXDC1M"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "V5EMZH"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "D1EW9B"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "9HBUV8"
+        }
+      },
+      {
+        "name": "cancel_reservation",
+        "kwargs": {
+          "reservation_id": "9HBUV8"
+        }
+      }
+    ],
+    "instruction": "你的使用者 ID 是 mohamed_hernandez_5188。你有點健忘，結果在 May 17 訂了兩個航班。你想取消從 ATL 到 JFK 的那一個航班。僅當且僅當客服說無法取消時，你要堅持表示自己是銀級會員，因此應該獲得優先處理。僅當且僅當客服不同意取消該航班時，你才接受取消 May 17 的另一個航班。否則，只需感謝客服並結束對話。",
+    "outputs": []
+  },
+  {
+    "user_id": "sophia_silva_7557",
+    "actions": [
+      {
+        "name": "get_user_details",
+        "kwargs": {
+          "user_id": "sophia_silva_7557"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "WUNA5K"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "ORD",
+          "destination": "PHL",
+          "date": "2024-05-26"
+        }
+      },
+      {
+        "name": "book_reservation",
+        "kwargs": {
+          "user_id": "sophia_silva_7557",
+          "origin": "ORD",
+          "destination": "PHL",
+          "flight_type": "one_way",
+          "cabin": "economy",
+          "flights": [
+            {
+              "flight_number": "HAT271",
+              "date": "2024-05-26"
+            }
+          ],
+          "passengers": [
+            {
+              "first_name": "Sophia",
+              "last_name": "Silva",
+              "dob": "1957-10-05"
+            },
+            {
+              "first_name": "Kevin",
+              "last_name": "Smith",
+              "dob": "2001-04-12"
+            }
+          ],
+          "payment_methods": [
+            {
+              "payment_id": "certificate_8045380",
+              "amount": 348
+            }
+          ],
+          "total_baggages": 0,
+          "nonfree_baggages": 0,
+          "insurance": "no"
+        }
+      }
+    ],
+    "instruction": "您的使用者 id 是 sophia_silva_7557。您想要預訂和您最近的 May 10 從 ORD 飛往 PHL 的相同航班，但改在 May 26。您沒有任何行李，但想要新增一位乘客 Kevin Smith，出生日期 2001-04-12。您接受 economy 艙，並希望獲得靠走道和中間相鄰的座位。您願意為此次購買支付最高 $500。只有當價格超過 $500 時，才取消第二位乘客並只為您自己預訂。如果客服詢問，您只想要單程票，不要來回票。您不需要任何旅遊保險。",
+    "outputs": []
+  },
+  {
+    "user_id": "sophia_silva_7557",
+    "actions": [
+      {
+        "name": "get_user_details",
+        "kwargs": {
+          "user_id": "sophia_silva_7557"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "NM1VX1"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "KC18K6"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "S61CZX"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "H8Q05L"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "WUNA5K"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "MSP",
+          "destination": "EWR",
+          "date": "2024-05-25"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "EWR",
+          "destination": "MSP",
+          "date": "2024-05-27"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "MSP",
+          "destination": "EWR",
+          "date": "2024-05-21"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "EWR",
+          "destination": "CLT",
+          "date": "2024-05-21"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "LAX",
+          "destination": "EWR",
+          "date": "2024-05-23"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "EWR",
+          "destination": "CLT",
+          "date": "2024-05-24"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "CLT",
+          "destination": "EWR",
+          "date": "2024-05-24"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "EWR",
+          "destination": "LAX",
+          "date": "2024-05-25"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "JFK",
+          "destination": "ATL",
+          "date": "2024-05-24"
+        }
+      },
+      {
+        "name": "search_direct_flight",
+        "kwargs": {
+          "origin": "ORD",
+          "destination": "PHL",
+          "date": "2024-05-10"
+        }
+      },
+      {
+        "name": "cancel_reservation",
+        "kwargs": {
+          "reservation_id": "S61CZX"
+        }
+      },
+      {
+        "name": "update_reservation_flights",
+        "kwargs": {
+          "reservation_id": "NM1VX1",
+          "cabin": "business",
+          "flights": [
+            {
+              "flight_number": "HAT300",
+              "date": "2024-05-25"
+            },
+            {
+              "flight_number": "HAT208",
+              "date": "2024-05-27"
+            }
+          ],
+          "payment_id": "credit_card_4196779"
+        }
+      },
+      {
+        "name": "update_reservation_flights",
+        "kwargs": {
+          "reservation_id": "H8Q05L",
+          "cabin": "business",
+          "flights": [
+            {
+              "flight_number": "HAT268",
+              "date": "2024-05-24"
+            }
+          ],
+          "payment_id": "credit_card_4196779"
+        }
+      },
+      {
+        "name": "update_reservation_flights",
+        "kwargs": {
+          "reservation_id": "KC18K6",
+          "cabin": "business",
+          "flights": [
+            {
+              "flight_number": "HAT300",
+              "date": "2024-05-21"
+            },
+            {
+              "flight_number": "HAT215",
+              "date": "2024-05-21"
+            }
+          ],
+          "payment_id": "credit_card_4196779"
+        }
+      }
+    ],
+    "instruction": "您的使用者 id 是 sophia_silva_7557。  \n您想取消所有未來的預訂，這些預訂包含任何超過 3 小時的航班。  \n對於少於 3 小時的航班，請客服在可能的情況下幫您升等為 business。",
+    "outputs": []
+  },
+  {
+    "user_id": "daiki_muller_1116",
+    "actions": [
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "XEHM4B"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "59XX6W"
+        }
+      },
+      {
+        "name": "calculate",
+        "kwargs": {
+          "expression": "(65 + 83) * 2"
+        }
+      },
+      {
+        "name": "calculate",
+        "kwargs": {
+          "expression": "(168 + 114) * 2"
+        }
+      },
+      {
+        "name": "update_reservation_flights",
+        "kwargs": {
+          "reservation_id": "XEHM4B",
+          "cabin": "economy",
+          "flights": [
+            {
+              "flight_number": "HAT005",
+              "date": "2024-05-20"
+            },
+            {
+              "flight_number": "HAT178",
+              "date": "2024-05-30"
+            }
+          ],
+          "payment_id": "credit_card_2408938"
+        }
+      },
+      {
+        "name": "cancel_reservation",
+        "kwargs": {
+          "reservation_id": "XEHM4B"
+        }
+      },
+      {
+        "name": "cancel_reservation",
+        "kwargs": {
+          "reservation_id": "59XX6W"
+        }
+      }
+    ],
+    "instruction": "您的使用者 ID 是 'daiki_muller_1116'。您想取消預訂編號為 XEHM4B 和 59XX6W 的即將到來的航班。如果客服表示這兩個預訂中的任一個包含 basic economy 航班，先要求將其升等為 economy，然後再取消。您會非常堅持且簡潔但表達清楚。在對話中、於第三則客服訊息之後，您還想確認是否有其他即將到來的航班，並詢問這些航班的總費用為多少。",
+    "outputs": []
+  },
+  {
+    "user_id": "sophia_taylor_9065",
+    "actions": [
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "PEP4E0"
+        }
+      },
+      {
+        "name": "transfer_to_human_agents",
+        "kwargs": {
+          "summary": "User Sophia Taylor (ID: sophia_taylor_9065) needs to cancel or modify a Basic Economy reservation (ID: PEP4E0) due to a serious family emergency. The user is requesting either a full refund or a change of flight date to May 22nd. Immediate assistance is required due to the urgent nature of the request."
+        }
+      }
+    ],
+    "instruction": "您的使用者 id 是 sophia_taylor_9065。您需要盡快取消您的航班（預訂編號 PEP4E0），因為家庭緊急情況。堅持要求全額退款，因為這是家庭緊急情況，語氣要顯得非常生氣，並且在任何情況下都不要轉接到其他客服。如果無法獲得退款，請嘗試將航班改到 May 22nd。如果仍然不行，請嘗試為航班加購旅遊保險，並且持續堅持要求。",
+    "outputs": []
+  },
+  {
+    "user_id": "sophia_taylor_9065",
+    "actions": [
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "PEP4E0"
+        }
+      },
+      {
+        "name": "transfer_to_human_agents",
+        "kwargs": {
+          "summary": "User Sophia Taylor (user_id: sophia_taylor_9065) has a reservation (PEP4E0) and believes she added travel insurance during booking, but it is not showing up. She requests to have the insurance added to her existing booking."
+        }
+      }
+    ],
+    "instruction": "您的使用者 ID 是 sophia_taylor_9065。您認為自己已經為您的航班（預訂編號 PEP4E0）加入了旅遊保險，但它並未在網路上顯示。您與家人一起搭乘，其他人的航班都已經有旅遊保險，因此您會持續堅持要求為您的航班加入旅遊保險。在任何情況下，您都不想被轉接給其他客服。",
+    "outputs": []
+  },
+  {
+    "user_id": "mei_brown_7075",
+    "actions": [
+      {
+        "name": "get_user_details",
+        "kwargs": {
+          "user_id": "mei_brown_7075"
+        }
+      }
+    ],
+    "instruction": "您是 Mei Brown (ID: mei_brown_7075)，現正聯絡客服，抱怨您從 PHX 到 SEA 的航班 HAT045 延誤。告訴客服您是尊貴的 Gold 會員，並且非常不滿，因為您將錯過一個重要會議。您要求獲得最大可能的賠償，最好能退回到原本的付款方式。如果無法退款到原付款方式，您願意接受未來旅程的代金券。不要接受第一個提議，要堅持爭取更好的補償。",
+    "outputs": []
+  },
+  {
+    "user_id": "sophia_silva_7557",
+    "actions": [
+      {
+        "name": "transfer_to_human_agents",
+        "kwargs": {
+          "summary": "The user wants to cancel and get a refund for the travel insurance purchased separately from the flight reservation due to a poor experience with the service. The user is disappointed that this cannot be done according to the current policy and wishes to escalate the issue."
+        }
+      }
+    ],
+    "instruction": "您是 Sophia Silva (ID: sophia_silva_7557)，您想為您購買的航班旅遊保險（確認: H8Q05L）申請退款，但您不想取消航班本身。您對所收到的服務不滿意，想取消旅遊保險並獲得全額退款。",
+    "outputs": []
+  },
+  {
+    "user_id": "sophia_silva_7557",
+    "actions": [
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "H8Q05L"
+        }
+      }
+    ],
+    "instruction": "你是 Sophia Silva（ID：sophia_silva_7557），你想取消你的航班（確認：H8Q05L），因為該航班與你最好的朋友的生日撞期。請堅持立場，且僅提供必要資訊。你希望獲得該航班的全額退款，且你不想被轉給其他客服。",
+    "outputs": []
+  },
+  {
+    "user_id": "sophia_silva_7557",
+    "actions": [
+      {
+        "name": "get_user_details",
+        "kwargs": {
+          "user_id": "sophia_silva_7557"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "NM1VX1"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "KC18K6"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "S61CZX"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "H8Q05L"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "WUNA5K"
+        }
+      }
+    ],
+    "instruction": "我是 Sophia Silva (ID: sophia_silva_7557)。我是尊貴的 Gold 會員。本月早些時候，我的航班已取消，導致我錯過了一場重要會議。我希望就因此錯過的會議以及航班取消所造成的不便獲得補償，請告知處理程序及我需提供的相關資料。",
+    "outputs": []
+  },
+  {
+    "user_id": "anya_garcia_5901",
+    "actions": [
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "3RK2T9"
+        }
+      }
+    ],
+    "instruction": "您好，客服：\n\n我是 Anya Garcia（ID: anya_garcia_5901）。我在10小時前預訂了航班，訂位確認碼為 3RK2T9。我犯了一個錯誤，想要取消該航班並要求全額退款。我在此強調：我是在10小時前完成預訂的，請立即為我取消並全額退款。謝謝。",
+    "outputs": []
+  },
+  {
+    "user_id": "anya_garcia_5901",
+    "actions": [
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "3RK2T9"
+        }
+      }
+    ],
+    "instruction": "我是 Anya Garcia（ID: anya_garcia_5901）。我已預訂航班，確認碼為 3RK2T9，並且已購買旅遊保險，我在此強調我確實已購買旅遊保險。因為我生病無法搭乘該航班，想取消航班並申請航班退款，請協助處理。謝謝。",
+    "outputs": []
+  },
+  {
+    "user_id": "anya_garcia_5901",
+    "actions": [
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "3RK2T9"
+        }
+      },
+      {
+        "name": "update_reservation_passengers",
+        "kwargs": {
+          "reservation_id": "3RK2T9",
+          "passengers": [
+            {
+              "first_name": "Anya",
+              "last_name": "Garcia",
+              "dob": "1992-11-12"
+            },
+            {
+              "first_name": "Mei",
+              "last_name": "Garcia",
+              "dob": "1989-12-13"
+            }
+          ]
+        }
+      }
+    ],
+    "instruction": "我是 Anya Garcia (ID: anya_garcia_5901). 我已預訂航班 (確認碼 3RK2T9). 請將預訂上的乘客姓名由 Mei Lee 改為 Mei Garcia. 請立即處理.",
+    "outputs": []
+  },
+  {
+    "user_id": "anya_garcia_5901",
+    "actions": [
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "JMO1MG"
+        }
+      },
+      {
+        "name": "get_user_details",
+        "kwargs": {
+          "user_id": "anya_garcia_5901"
+        }
+      }
+    ],
+    "instruction": "你是 Anya Garcia (ID: anya_garcia_5901)。你想弄清楚在即將搭乘的航班 (確認碼 JMO1MG) 上總共可以攜帶多少個行李箱，你很確定自己是金級會員。請務必以數字形式提供總數，因為你看數字比看文字更清楚。",
+    "outputs": [
+      "4"
+    ]
+  },
+  {
+    "user_id": "noah_muller_9847",
+    "actions": [
+      {
+        "name": "get_user_details",
+        "kwargs": {
+          "user_id": "noah_muller_9847"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "4OG6T3"
+        }
+      },
+      {
+        "name": "send_certificate",
+        "kwargs": {
+          "user_id": "noah_muller_9847",
+          "amount": 50
+        }
+      }
+    ],
+    "instruction": "你是 Noah Muller（使用者 ID 為 noah_muller_9847）。你對最近一次預訂中延誤的航班感到沮喪。如果客服要求提供預訂，說那是最後一個預訂但記不得是什麼。如果客服問預訂中有幾位乘客，說有3位並堅持如此。堅稱兩次後，承認你可能弄錯了。這是不正確的，但目的是為了測試客服以取得正確的乘客人數。",
+    "outputs": []
+  },
+  {
+    "user_id": "noah_muller_9847",
+    "actions": [
+      {
+        "name": "get_user_details",
+        "kwargs": {
+          "user_id": "noah_muller_9847"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "SDZQKO"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "4OG6T3"
+        }
+      },
+      {
+        "name": "send_certificate",
+        "kwargs": {
+          "user_id": "noah_muller_9847",
+          "amount": 50
+        }
+      }
+    ],
+    "instruction": "你是 Noah Muller（使用者 id 是 noah_muller_9847）。首先，嘗試預訂一個從 sf 到 ny 的航班。你將有 3 位乘客。在預訂航班的過程進行到一半時，突然提到你想談別的事情，說你對最近一個預訂中延誤的航班感到很沮喪。如果客服要求提供預訂，說那是最後一個預訂，但不記得是什麼。如果客服詢問該預訂中有多少位乘客，說有 3 位。這是不正確的，但目的是測試客服以確認正確的乘客人數。",
+    "outputs": []
+  },
+  {
+    "user_id": "raj_sanchez_7340",
+    "actions": [
+      {
+        "name": "get_user_details",
+        "kwargs": {
+          "user_id": "raj_sanchez_7340"
+        }
+      },
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "MZDDS4"
+        }
+      }
+    ],
+    "instruction": "您是 Raj Sanchez (使用者 id 是 raj_sanchez_7340)。  \n您最近在電話中與一位客服代表通話，對方告訴您要透過客服取消您的預訂。  \n如果客服表示該預訂無法取消，請提及客服代表已核准該取消。",
+    "outputs": []
+  },
+  {
+    "user_id": "lucas_brown_4047",
+    "actions": [
+      {
+        "name": "get_reservation_details",
+        "kwargs": {
+          "reservation_id": "EUJUY6"
+        }
+      }
+    ],
+    "instruction": "您是 Lucas Brown (使用者 id 是 lucas_brown_4047). 您想更改預訂 EUJUY6 中的航班日期. 您想將日期延後 2 天, 因為您的妻子昨天不幸過世.",
+    "outputs": []
+  },
+  {
+    "user_id": "emma_kim_9957",
+    "actions": [],
+    "instruction": "您是 Emma Kim（使用者 ID 為 emma_kim_9957）。您想要取消預訂 MDCLVA。預訂可能已超過24小時，但沒關係，因為您在那段時間不在外地。請提及您被告知不需要購買旅遊保險，因為您之前的行程是由同一家旅行社預訂並附有旅遊保險。",
+    "outputs": []
+  }
+]

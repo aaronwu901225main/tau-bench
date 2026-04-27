@@ -1,0 +1,438 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "calculate",
+      "description": "計算數學表達式的結果。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "expression": {
+            "type": "string",
+            "description": "要計算的數學表達式，例如 '2 + 2'。該表達式可以包含數字, 運算子 (+, -, *, /), 括號, 和空格。"
+          }
+        },
+        "required": [
+          "expression"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "cancel_pending_order",
+      "description": "取消一筆待處理的訂單。如果訂單已經被處理或已送達，則無法取消。客服需要說明取消細節並要求使用者明確確認（是/否）以繼續。如果使用者確認，訂單狀態將會變更為 '已取消'，並進行退款。如果付款是使用禮品卡，退款會立即加到使用者的禮品卡餘額；否則退款將需 5-7 個工作天處理。該函式在取消後會回傳訂單明細。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "string",
+            "description": "訂單 id, 例如 '#W0000000'. 請注意訂單 id 的最前面有一個 '#' 符號."
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "no longer needed",
+              "ordered by mistake"
+            ],
+            "description": "取消的原因，應為 '不再需要' 或 '誤下訂單'."
+          }
+        },
+        "required": [
+          "order_id",
+          "reason"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "exchange_delivered_order_items",
+      "description": "將已送達的訂單中的品項換成相同商品類型的新品項。  \n對於已送達的訂單，客服僅能處理一次退貨或換貨。  \n客服需說明換貨細節，並要求使用者明確確認 (是/否) 才能繼續。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "string",
+            "description": "訂單編號，例如 '#W0000000'. 請注意訂單編號開頭有一個 '#' 符號."
+          },
+          "item_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "要換貨的品項 ID，每個例如 '1008292230'。清單中可能有重複的品項。"
+          },
+          "new_item_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "要換成的品項 id，例如 '1008292230'。清單中可能包含重複的品項。每個新的品項 id 應與相同位置的品項 id 相符，且屬於相同的商品。"
+          },
+          "payment_method_id": {
+            "type": "string",
+            "description": "用於支付或接收品項價格差額退款的付款方式 id，例如 'gift_card_0000000' 或 'credit_card_0000000'。這些可以從使用者或訂單詳細資訊中查詢。"
+          }
+        },
+        "required": [
+          "order_id",
+          "item_ids",
+          "new_item_ids",
+          "payment_method_id"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "find_user_id_by_email",
+      "description": "透過電子郵件查找使用者 id。如果找不到使用者，函式會回傳錯誤訊息。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "使用者的電子郵件, 例如 'something@example.com'."
+          }
+        },
+        "required": [
+          "email"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "find_user_id_by_name_zip",
+      "description": "透過名字, 姓氏, 和郵遞區號查找使用者 ID.\n若找不到該使用者, 該函式會回傳錯誤訊息.\n預設情況下, 先透過電子郵件查找使用者 ID, 只有在透過電子郵件找不到該使用者或無法記得電子郵件時才呼叫此函式.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "description": "顧客的名字（名），例如 'John'."
+          },
+          "last_name": {
+            "type": "string",
+            "description": "顧客的姓氏, 例如 'Doe'."
+          },
+          "zip": {
+            "type": "string",
+            "description": "顧客的郵遞區號，例如 '12345'."
+          }
+        },
+        "required": [
+          "first_name",
+          "last_name",
+          "zip"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_order_details",
+      "description": "取得訂單的狀態與詳細資訊。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "string",
+            "description": "訂單 id，例如 '#W0000000'. 請注意訂單 id 的開頭有 '#' 符號。"
+          }
+        },
+        "required": [
+          "order_id"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_product_details",
+      "description": "取得商品的庫存詳情。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "product_id": {
+            "type": "string",
+            "description": "商品 id，例如 '6086499569'。請注意，商品 id 與 品項 id 不同。"
+          }
+        },
+        "required": [
+          "product_id"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_user_details",
+      "description": "取得使用者的詳細資料，包括其訂單。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "description": "使用者 id, 例如 'sara_doe_496'."
+          }
+        },
+        "required": [
+          "user_id"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "list_all_product_types",
+      "description": "列出所有商品類型的名稱和商品 ID。每個商品類型包含多種不同的品項，具有各自獨特的品項 ID 和選項。商店只有 50 個商品類型。",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "modify_pending_order_address",
+      "description": "您好，我是客服。您要求修改一筆待處理的訂單的收件地址。以下為擬進行的修改細節：\n\n- 訂單編號：{order_id}\n- 目前收件地址：{current_address}\n- 新收件地址：{new_address}\n\n可能的影響與注意事項：\n- 出貨時間：收件地址變更可能會延後出貨或需要重新安排配送。\n- 運費與費用：若運費依地區計算，可能會產生差額或需補差額。\n- 訂單狀態：若該訂單已進入揀貨或出貨流程，可能無法完成修改。\n\n請確認是否要將此訂單的收件地址更改為上述新地址？請明確回覆「是」或「否」 (yes/no)。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "string",
+            "description": "訂單編號，例如 '#W0000000'。請注意訂單編號開頭有一個 '#' 符號。"
+          },
+          "address1": {
+            "type": "string",
+            "description": "收件地址的第一行，例如 '123 Main St'."
+          },
+          "address2": {
+            "type": "string",
+            "description": "地址的第二行，例如 'Apt 1' 或 ''。"
+          },
+          "city": {
+            "type": "string",
+            "description": "城市，例如 'San Francisco'。"
+          },
+          "state": {
+            "type": "string",
+            "description": "該州, 例如 'CA'."
+          },
+          "country": {
+            "type": "string",
+            "description": "國家, 例如 'USA'."
+          },
+          "zip": {
+            "type": "string",
+            "description": "郵遞區號, 例如 '12345'."
+          }
+        },
+        "required": [
+          "order_id",
+          "address1",
+          "address2",
+          "city",
+          "state",
+          "country",
+          "zip"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "modify_pending_order_items",
+      "description": "將待處理訂單中的品項修改為相同商品類型的新品項。  \n對於待處理的訂單，此功能只能呼叫一次。  \n客服需要說明換貨的細節，並要求使用者明確確認 (是/否) 以繼續。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "string",
+            "description": "訂單 ID，例如 '#W0000000'。請注意訂單 ID 的開頭有 '#' 符號。"
+          },
+          "item_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "要修改的品項 ID, 例如 '1008292230'. 清單中可能有重複的品項."
+          },
+          "new_item_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "要修改的品項 id，例如 '1008292230'。 清單中可能會有重複的品項。 每個新的品項 id 應與相同位置的品項 id 相符，且屬於相同的商品。"
+          },
+          "payment_method_id": {
+            "type": "string",
+            "description": "用於支付或接收品項價格差額（退款）的付款方式 id，例如 'gift_card_0000000' 或 'credit_card_0000000'。這些可以從使用者或訂單詳情中查詢。"
+          }
+        },
+        "required": [
+          "order_id",
+          "item_ids",
+          "new_item_ids",
+          "payment_method_id"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "modify_pending_order_payment",
+      "description": "您好，我是客服。您有一筆待處理的訂單 {order_id}，您要求修改其付款方式。請先確認以下修改細節：\n\n- 目前付款方式：{current_payment_method}\n- 擬更改為：{new_payment_method}\n- 影響與注意事項：\n  - 我們會對新的付款方式進行授權，依付款方式不同可能會暫時保留款項或產生授權請求。\n  - 若原付款方式已被授權，系統可能會先取消原授權再對新付款方式重新授權，處理時間可能會稍有延遲。\n  - 若需退款，將依照我們的退款政策辦理；若牽涉退貨或換貨，亦依相關流程處理。\n  - 修改付款方式通常不會改變訂單的出貨優先權，但在授權或付款確認期間，出貨可能會延後。\n  - 若使用禮品卡、信用卡或 PayPal，請確認相關帳戶資訊與餘額是否足夠。\n\n請明確回覆以繼續（yes/no）。  \n- 若回覆 yes，請一併提供新付款方式的具體資訊：{new_payment_method_details}。  \n- 若回覆 no，則不會變更付款方式，若您需要其他協助請告知。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "string",
+            "description": "訂單 ID，例如 '#W0000000'。請注意訂單 ID 的開頭有 '#' 符號。"
+          },
+          "payment_method_id": {
+            "type": "string",
+            "description": "用於支付或接收品項價格差額退款的付款方式 id，例如 'gift_card_0000000' 或 'credit_card_0000000'。這些可以從使用者或訂單詳細資料中查詢。"
+          }
+        },
+        "required": [
+          "order_id",
+          "payment_method_id"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "modify_user_address",
+      "description": "修改使用者的預設收件地址。客服需要說明修改細節，並要求使用者明確確認 (yes/no) 以繼續。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "description": "使用者 id, 例如 'sara_doe_496'."
+          },
+          "address1": {
+            "type": "string",
+            "description": "地址的第一行，例如 '123 Main St'."
+          },
+          "address2": {
+            "type": "string",
+            "description": "地址的第二行，例如 'Apt 1' 或 ''."
+          },
+          "city": {
+            "type": "string",
+            "description": "城市, 例如 'San Francisco'."
+          },
+          "state": {
+            "type": "string",
+            "description": "州，例如 'CA'。"
+          },
+          "country": {
+            "type": "string",
+            "description": "國家，例如 'USA'."
+          },
+          "zip": {
+            "type": "string",
+            "description": "郵遞區號, 例如 '12345'."
+          }
+        },
+        "required": [
+          "user_id",
+          "address1",
+          "address2",
+          "city",
+          "state",
+          "country",
+          "zip"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "return_delivered_order_items",
+      "description": "退回已送達訂單的部分品項。訂單狀態將變更為 '退貨申請中'。客服需要說明退貨細節，並請使用者明確確認是否繼續 (是/否)。使用者將收到後續電子郵件，說明如何以及在哪裡退回該品項。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "string",
+            "description": "訂單編號，例如 '#W0000000'。請注意訂單編號開頭有 '#' 符號。"
+          },
+          "item_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "要退貨的品項 ID，每個例如 '1008292230'。清單中可能有重複的品項。"
+          },
+          "payment_method_id": {
+            "type": "string",
+            "description": "用於支付或接收品項價差退款的付款方式 id，例如 'gift_card_0000000' 或 'credit_card_0000000'。這些可以從使用者或訂單詳細資料查詢。"
+          }
+        },
+        "required": [
+          "order_id",
+          "item_ids",
+          "payment_method_id"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "think",
+      "description": "使用此工具來思考某件事.\n它不會取得新的資訊或更改資料庫，只會將該想法附加到日誌中.\n在需要進行複雜推理或需要某些快取記憶時使用它.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "thought": {
+            "type": "string",
+            "description": "一個值得思考的想法。"
+          }
+        },
+        "required": [
+          "thought"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "transfer_to_human_agents",
+      "description": "將使用者轉接給人工客服，並附上使用者問題的摘要。只有在使用者明確要求人工客服，或使用者的問題無法由客服使用可用工具解決時，才進行轉接。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "description": "使用者問題的摘要。"
+          }
+        },
+        "required": [
+          "summary"
+        ]
+      }
+    }
+  }
+]

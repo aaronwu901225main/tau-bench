@@ -10,18 +10,18 @@ from tau_bench.envs.user import UserStrategy
 REQUIRED_TEMPERATURE = 1.0
 
 
-def parse_required_temperature(value: str) -> float:
-    """GPT-5-mini 僅允許 temperature=1。"""
+def parse_temperature(value: str) -> float:
+    """Parse temperature as float."""
     try:
         temperature = float(value)
     except ValueError as exc:
         raise argparse.ArgumentTypeError("temperature 必須是數字") from exc
-
-    if temperature != REQUIRED_TEMPERATURE:
-        raise argparse.ArgumentTypeError(
-            f"gpt-5-mini 只支援 temperature={REQUIRED_TEMPERATURE:g}"
-        )
     return temperature
+
+
+def is_gpt_5_mini(model_name: str) -> bool:
+    normalized = model_name.strip().lower()
+    return normalized == "gpt-5-mini" or normalized.endswith("/gpt-5-mini")
 
 
 def parse_args() -> RunConfig:
@@ -61,7 +61,7 @@ def parse_args() -> RunConfig:
     )
     parser.add_argument(
         "--temperature",
-        type=parse_required_temperature,
+        type=parse_temperature,
         default=REQUIRED_TEMPERATURE,
         help="The sampling temperature for the action model (gpt-5-mini requires 1)",
     )
@@ -71,6 +71,13 @@ def parse_args() -> RunConfig:
         default="test",
         choices=["train", "test", "dev"],
         help="The split of tasks to run (only applies to the retail domain for now",
+    )
+    parser.add_argument(
+        "--locale",
+        type=str,
+        default="en",
+        choices=["en", "zh-TW"],
+        help="Locale for task/prompt localization",
     )
     parser.add_argument("--start-index", type=int, default=0)
     parser.add_argument("--end-index", type=int, default=-1, help="Run all tasks if -1")
@@ -88,6 +95,10 @@ def parse_args() -> RunConfig:
     parser.add_argument("--few-shot-displays-path", type=str, help="Path to a jsonlines file containing few shot displays")
     parser.add_argument("--resume", action="store_true", default=False, help="Resume from existing checkpoint JSON files in log-dir")
     args = parser.parse_args()
+
+    if is_gpt_5_mini(args.model) and args.temperature != REQUIRED_TEMPERATURE:
+        parser.error(f"argument --temperature: gpt-5-mini 只支援 temperature={REQUIRED_TEMPERATURE:g}")
+
     print(args)
     return RunConfig(
         model_provider=args.model_provider,
@@ -99,6 +110,7 @@ def parse_args() -> RunConfig:
         agent_strategy=args.agent_strategy,
         temperature=args.temperature,
         task_split=args.task_split,
+        locale=args.locale,
         start_index=args.start_index,
         end_index=args.end_index,
         task_ids=args.task_ids,

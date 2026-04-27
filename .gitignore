@@ -1,6 +1,3 @@
-#Run result artifacts
-results/**
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -8,3 +5,8 @@ __pycache__/
 *.out
 *.slurm
 .token_usage.json
+tau_translate.sh
+*.log
+scripts/translation_api_usage_daily.json
+scripts/translation_api_usage_daily.json.lock
+logs/tau_translate.pid

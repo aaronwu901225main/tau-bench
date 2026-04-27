@@ -1,0 +1,480 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "book_reservation",
+      "description": "預訂。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "description": "用來預訂的使用者的 ID，例如 'sara_doe_496'。"
+          },
+          "origin": {
+            "type": "string",
+            "description": "出發城市的 IATA 代碼, 例如 'SFO'."
+          },
+          "destination": {
+            "type": "string",
+            "description": "目的地城市的 IATA 代碼，例如 'JFK'。"
+          },
+          "flight_type": {
+            "type": "string",
+            "enum": [
+              "one_way",
+              "round_trip"
+            ]
+          },
+          "cabin": {
+            "type": "string",
+            "enum": [
+              "basic_economy",
+              "economy",
+              "business"
+            ]
+          },
+          "flights": {
+            "type": "array",
+            "description": "一個包含每個航班詳細資料的物件陣列。",
+            "items": {
+              "type": "object",
+              "properties": {
+                "flight_number": {
+                  "type": "string",
+                  "description": "Flight number, such as 'HAT001'."
+                },
+                "date": {
+                  "type": "string",
+                  "description": "The date for the flight in the format 'YYYY-MM-DD', such as '2024-05-01'."
+                }
+              },
+              "required": [
+                "flight_number",
+                "date"
+              ]
+            }
+          },
+          "passengers": {
+            "type": "array",
+            "description": "一個包含每位乘客詳細資料的物件陣列。",
+            "items": {
+              "type": "object",
+              "properties": {
+                "first_name": {
+                  "type": "string",
+                  "description": "The first name of the passenger, such as 'Noah'."
+                },
+                "last_name": {
+                  "type": "string",
+                  "description": "The last name of the passenger, such as 'Brown'."
+                },
+                "dob": {
+                  "type": "string",
+                  "description": "The date of birth of the passenger in the format 'YYYY-MM-DD', such as '1990-01-01'."
+                }
+              },
+              "required": [
+                "first_name",
+                "last_name",
+                "dob"
+              ]
+            }
+          },
+          "payment_methods": {
+            "type": "array",
+            "description": "一個包含各付款方式詳細資訊的物件陣列。",
+            "items": {
+              "type": "object",
+              "properties": {
+                "payment_id": {
+                  "type": "string",
+                  "description": "The payment id stored in user profile, such as 'credit_card_7815826', 'gift_card_7815826', 'certificate_7815826'."
+                },
+                "amount": {
+                  "type": "number",
+                  "description": "The amount to be paid."
+                }
+              },
+              "required": [
+                "payment_id",
+                "amount"
+              ]
+            }
+          },
+          "total_baggages": {
+            "type": "integer",
+            "description": "預訂中包含的行李項目總數."
+          },
+          "nonfree_baggages": {
+            "type": "integer",
+            "description": "預訂中包含的非免費行李件數."
+          },
+          "insurance": {
+            "type": "string",
+            "enum": [
+              "yes",
+              "no"
+            ]
+          }
+        },
+        "required": [
+          "user_id",
+          "origin",
+          "destination",
+          "flight_type",
+          "cabin",
+          "flights",
+          "passengers",
+          "payment_methods",
+          "total_baggages",
+          "nonfree_baggages",
+          "insurance"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "calculate",
+      "description": "計算數學表達式的結果。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "expression": {
+            "type": "string",
+            "description": "要計算的數學表達式，例如 '2 + 2'。該表達式可以包含數字、運算子 (+, -, *, /)、括號，和空格。"
+          }
+        },
+        "required": [
+          "expression"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "cancel_reservation",
+      "description": "取消整筆預訂。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "reservation_id": {
+            "type": "string",
+            "description": "預訂 ID，例如 'ZFA04Y'."
+          }
+        },
+        "required": [
+          "reservation_id"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_reservation_details",
+      "description": "取得預訂的詳細資訊.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "reservation_id": {
+            "type": "string",
+            "description": "預訂 ID, 例如 '8JX2WO'."
+          }
+        },
+        "required": [
+          "reservation_id"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_user_details",
+      "description": "取得一位使用者的詳細資訊，包括其預訂。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "description": "使用者 id，例如 'sara_doe_496'。"
+          }
+        },
+        "required": [
+          "user_id"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "list_all_airports",
+      "description": "列出所有機場及其所在城市。",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "search_direct_flight",
+      "description": "搜尋特定日期兩個城市之間的直飛航班。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "origin": {
+            "type": "string",
+            "description": "出發城市機場的三個字母代碼，例如 'JFK'。"
+          },
+          "destination": {
+            "type": "string",
+            "description": "目的地城市的機場三個字母代碼，例如 'LAX'。"
+          },
+          "date": {
+            "type": "string",
+            "description": "航班的日期，格式為 'YYYY-MM-DD'，例如 '2024-01-01'。"
+          }
+        },
+        "required": [
+          "origin",
+          "destination",
+          "date"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "search_onestop_flight",
+      "description": "搜尋兩個城市之間在特定日期的直飛航班。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "origin": {
+            "type": "string",
+            "description": "出發城市機場以三個字母表示，例如 'JFK'。"
+          },
+          "destination": {
+            "type": "string",
+            "description": "目的地城市機場的三字代碼，例如 'LAX'。"
+          },
+          "date": {
+            "type": "string",
+            "description": "航班的日期，格式為 'YYYY-MM-DD'，例如 '2024-05-01'."
+          }
+        },
+        "required": [
+          "origin",
+          "destination",
+          "date"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "send_certificate",
+      "description": "將證書發送給使用者。小心！",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "description": "要用於預訂的使用者 ID，例如 'sara_doe_496'。"
+          },
+          "amount": {
+            "type": "number",
+            "description": "要寄送的憑證金額。"
+          }
+        },
+        "required": [
+          "user_id",
+          "amount"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "think",
+      "description": "使用此工具來思考某件事。它不會取得新資訊或更改資料庫，只會將該思考附加到日誌中。當需要複雜推理時使用它。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "thought": {
+            "type": "string",
+            "description": "值得思考的想法。"
+          }
+        },
+        "required": [
+          "thought"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "transfer_to_human_agents",
+      "description": "將使用者轉接給人工客服，並附上使用者問題摘要。僅在使用者明確要求人工客服，或使用者的問題客服以現有工具無法解決時，才進行轉接。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "description": "使用者問題摘要."
+          }
+        },
+        "required": [
+          "summary"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "update_reservation_baggages",
+      "description": "更新預訂的行李資訊。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "reservation_id": {
+            "type": "string",
+            "description": "預訂識別碼, 例如 'ZFA04Y'."
+          },
+          "total_baggages": {
+            "type": "integer",
+            "description": "預訂中包含的行李件數更新後的總數。"
+          },
+          "nonfree_baggages": {
+            "type": "integer",
+            "description": "預訂中包含的非免費行李項目更新後的數量."
+          },
+          "payment_id": {
+            "type": "string",
+            "description": "儲存在使用者資料中的付款 id, 例如 'credit_card_7815826', 'gift_card_7815826', 'certificate_7815826'."
+          }
+        },
+        "required": [
+          "reservation_id",
+          "total_baggages",
+          "nonfree_baggages",
+          "payment_id"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "update_reservation_flights",
+      "description": "更新預訂的航班資訊。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "reservation_id": {
+            "type": "string",
+            "description": "預訂 ID, 例如 'ZFA04Y'."
+          },
+          "cabin": {
+            "type": "string",
+            "enum": [
+              "basic_economy",
+              "economy",
+              "business"
+            ]
+          },
+          "flights": {
+            "type": "array",
+            "description": "一個包含物件的陣列，描述整個新預訂中每個航段的詳細資訊。即使某個航段未被變更，也仍應包含在該陣列中。",
+            "items": {
+              "type": "object",
+              "properties": {
+                "flight_number": {
+                  "type": "string",
+                  "description": "Flight number, such as 'HAT001'."
+                },
+                "date": {
+                  "type": "string",
+                  "description": "The date for the flight in the format 'YYYY-MM-DD', such as '2024-05-01'."
+                }
+              },
+              "required": [
+                "flight_number",
+                "date"
+              ]
+            }
+          },
+          "payment_id": {
+            "type": "string",
+            "description": "儲存在使用者檔案中的付款 ID，例如 'credit_card_7815826', 'gift_card_7815826', 'certificate_7815826'."
+          }
+        },
+        "required": [
+          "reservation_id",
+          "cabin",
+          "flights",
+          "payment_id"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "update_reservation_passengers",
+      "description": "更新預訂的乘客資訊。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "reservation_id": {
+            "type": "string",
+            "description": "預訂 ID，例如 'ZFA04Y'。"
+          },
+          "passengers": {
+            "type": "array",
+            "description": "包含每位乘客詳細資訊的物件陣列。",
+            "items": {
+              "type": "object",
+              "properties": {
+                "first_name": {
+                  "type": "string",
+                  "description": "The first name of the passenger, such as 'Noah'."
+                },
+                "last_name": {
+                  "type": "string",
+                  "description": "The last name of the passenger, such as 'Brown'."
+                },
+                "dob": {
+                  "type": "string",
+                  "description": "The date of birth of the passenger in the format 'YYYY-MM-DD', such as '1990-01-01'."
+                }
+              },
+              "required": [
+                "first_name",
+                "last_name",
+                "dob"
+              ]
+            }
+          }
+        },
+        "required": [
+          "reservation_id",
+          "passengers"
+        ]
+      }
+    }
+  }
+]

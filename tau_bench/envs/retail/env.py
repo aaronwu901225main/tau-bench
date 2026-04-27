@@ -17,7 +17,9 @@ class MockRetailDomainEnv(Env):
         user_provider: Optional[str] = None,
         task_split: str = "test",
         task_index: Optional[int] = None,
+        locale: str = "en",
     ):
+        self.task_split = task_split
         match task_split:
             case "test":
                 from tau_bench.envs.retail.tasks_test import TASKS_TEST as tasks
@@ -37,5 +39,6 @@ class MockRetailDomainEnv(Env):
             user_model=user_model,
             user_provider=user_provider,
             task_index=task_index,
+            locale=locale,
         )
         self.terminate_tools = ["transfer_to_human_agents"]

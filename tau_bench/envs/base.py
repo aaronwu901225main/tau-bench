@@ -53,6 +53,7 @@ class Env(object):
         user_model: str,
         user_provider: Optional[str] = None,
         task_index: Optional[int] = None,
+        locale: str = "en",
     ) -> None:
         super().__init__()
         self.data_load_func = data_load_func
@@ -70,8 +71,12 @@ class Env(object):
         self.task = tasks[self.task_index]
         self.wiki = wiki
         self.rules = rules
+        self.locale = locale
         self.user = load_user(
-            user_strategy=user_strategy, model=user_model, provider=user_provider
+            user_strategy=user_strategy,
+            model=user_model,
+            provider=user_provider,
+            locale=locale,
         )
         self.actions: List[Action] = []
 
@@ -94,7 +99,10 @@ class Env(object):
         reward = 0
         done = False
         if action.name == RESPOND_ACTION_NAME:
-            observation = self.user.step(action.kwargs["content"])
+            content = action.kwargs.get("content")
+            if content is None:
+                content = ""
+            observation = self.user.step(content)
             info.source = "user"
             done = "###STOP###" in observation
         elif action.name in self.tools_map:
@@ -148,10 +156,13 @@ class Env(object):
             for output in self.task.outputs:
                 found = False
                 for action in self.actions:
+                    content = action.kwargs.get("content")
+                    if content is None:
+                        content = ""
                     if (
                         action.name == RESPOND_ACTION_NAME
                         and output.lower()
-                        in action.kwargs["content"].lower().replace(",", "")
+                        in content.lower().replace(",", "")
                     ):
                         found = True
                         break

@@ -1,6 +1,7 @@
 # Copyright Sierra
 
 import json
+from pathlib import Path
 
 from tau_bench.agents.base import Agent
 from tau_bench.envs.base import Env
@@ -14,6 +15,19 @@ from typing import Optional, List, Dict, Any, Tuple
 from tau_bench.litellm_retry import completion_with_retry
 
 
+LOCALES_DIR = Path(__file__).resolve().parents[1] / "locales"
+
+
+def _load_shared_instruction(locale: str, file_name: str, default_text: str) -> str:
+    if locale == "en":
+        return default_text
+    prompt_path = LOCALES_DIR / locale / "shared" / file_name
+    if not prompt_path.exists():
+        return default_text
+    content = prompt_path.read_text(encoding="utf-8").strip()
+    return content if content else default_text
+
+
 class ChatReActAgent(Agent):
     def __init__(
         self,
@@ -23,8 +37,13 @@ class ChatReActAgent(Agent):
         provider: str,
         use_reasoning: bool = True,
         temperature: float = 0.0,
+        locale: str = "en",
     ) -> None:
-        instruction = REACT_INSTRUCTION if use_reasoning else ACT_INSTRUCTION
+        instruction = _load_shared_instruction(
+            locale=locale,
+            file_name="react_instruction.txt" if use_reasoning else "act_instruction.txt",
+            default_text=REACT_INSTRUCTION if use_reasoning else ACT_INSTRUCTION,
+        )
         self.prompt = (
             wiki + "\n#Available tools\n" + json.dumps(tools_info) + instruction
         )
@@ -33,6 +52,7 @@ class ChatReActAgent(Agent):
         self.temperature = temperature
         self.use_reasoning = use_reasoning
         self.tools_info = tools_info
+        self.locale = locale
 
     def generate_next_step(
         self, messages: List[Dict[str, Any]]
