@@ -1,0 +1,5 @@
+model,env,locale,strategy,avg_reward,pass_k1,pass_k2,pass_k3,pass_k4,status
+gpt-oss-20b,retail,zh-TW,tool-calling,0.41956521739130437,0.41956521739130437,0.2637681159420291,0.1891304347826087,0.1391304347826087,ok
+gpt-oss-20b,retail,en,tool-calling,0.5,0.5,0.3289855072463767,0.24130434782608695,0.1826086956521739,ok
+gpt-oss-20b,airline,zh-TW,tool-calling,0.335,0.335,0.2333333333333333,0.195,0.18,ok
+gpt-oss-20b,airline,en,tool-calling,0.395,0.395,0.2366666666666667,0.18,0.16,ok

@@ -1,0 +1,3 @@
+model,env,locale,strategy,avg_reward,pass_k1,pass_k2,pass_k3,pass_k4,status
+Gemma-4-31B-it,retail,zh-TW,tool-calling,0.6456521739130435,0.6456521739130435,0.5289855072463767,0.46304347826086956,0.41739130434782606,ok
+Gemma-4-31B-it,airline,zh-TW,tool-calling,0.485,0.485,0.37,0.315,0.28,ok
