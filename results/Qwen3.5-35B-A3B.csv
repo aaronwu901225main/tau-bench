@@ -1,0 +1,5 @@
+model,env,locale,strategy,avg_reward,pass_k1,pass_k2,pass_k3,pass_k4,status
+Qwen3.5-35B-A3B,retail,zh-TW,tool-calling,0.6108695652173913,0.6108695652173913,0.4782608695652173,0.4,0.34782608695652173,ok
+Qwen3.5-35B-A3B,retail,en,tool-calling,0.7369565217391304,0.7369565217391304,0.6159420289855073,0.5369565217391304,0.4782608695652174,ok
+Qwen3.5-35B-A3B,airline,zh-TW,tool-calling,0.495,0.495,0.3833333333333333,0.325,0.28,ok
+Qwen3.5-35B-A3B,airline,en,tool-calling,0.525,0.525,0.41,0.345,0.3,ok
