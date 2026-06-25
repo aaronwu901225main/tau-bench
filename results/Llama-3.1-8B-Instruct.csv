@@ -1,5 +1,5 @@
-model,env,locale,strategy,avg_reward,pass_k1,pass_k2,pass_k3,pass_k4,status
-Llama-3.1-8B-Instruct,retail,zh-TW,tool-calling,0.05217391304347826,0.05217391304347826,0.04492753623188405,0.0391304347826087,0.034782608695652174,ok
-Llama-3.1-8B-Instruct,retail,en,tool-calling,0.058695652173913045,0.058695652173913045,0.05217391304347826,0.05217391304347826,0.05217391304347826,ok
-Llama-3.1-8B-Instruct,airline,zh-TW,tool-calling,0.31,0.31,0.2733333333333333,0.245,0.22,ok
-Llama-3.1-8B-Instruct,airline,en,tool-calling,0.335,0.335,0.31333333333333335,0.295,0.28,ok
+model,env,locale,pass_k1,pass_k2,pass_k3,pass_k4
+Llama-3.1-8B-Instruct,retail,zh-TW,5.22%,4.49%,3.91%,3.48%
+Llama-3.1-8B-Instruct,retail,en,5.87%,5.22%,5.22%,5.22%
+Llama-3.1-8B-Instruct,airline,zh-TW,31.00%,27.33%,24.50%,22.00%
+Llama-3.1-8B-Instruct,airline,en,33.50%,31.33%,29.50%,28.00%

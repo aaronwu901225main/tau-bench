@@ -1,176 +1,257 @@
-# τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains
+# tau-bench handover fork
 
-**⚠️ WARNING: The tasks in this repo are not updated.** This repository contains outdated versions of the airline and retail tasks. Please use [τ³-bench](https://github.com/sierra-research/tau2-bench) for the latest fixed tasks and new domains.
+This repository is a handover-ready fork of `sierra-research/tau-bench`. It
+keeps the original benchmark code and commit history, plus local changes for
+Traditional Chinese evaluation, resumable runs, token-budgeted OpenAI user
+simulation, and recorded experiment outputs.
 
-**❗News**: The [τ²-bench](https://github.com/sierra-research/tau2-bench) repository has been updated to [τ³-bench](https://github.com/sierra-research/tau2-bench), which includes a new `banking` domain, a `voice` evaluation modality, as well as fixes to the `airline` and `retail` domain tasks. Please navigate to the [τ³-bench repository](https://github.com/sierra-research/tau2-bench) to use the latest version of this benchmark.
+Upstream warning: the original tau-bench tasks are no longer the newest task
+set. Sierra Research now points users to
+[tau2-bench / tau3-bench](https://github.com/sierra-research/tau2-bench) for the
+latest fixed tasks and newer domains. This fork is preserved for the local
+airline/retail experiments already run here.
 
----
+## What this fork adds
 
-We propose $\tau$-bench, a benchmark emulating dynamic conversations between a user (simulated by language models) and a language agent provided with domain-specific API tools and policy guidelines.
+- `--locale en|zh-TW` for English and Traditional Chinese benchmark runs.
+- File-based Traditional Chinese data under `tau_bench/locales/zh-TW/`.
+- Localized user simulator and Act/ReAct prompts in
+  `tau_bench/locales/zh-TW/shared/`.
+- `--resume` support that loads existing checkpoint JSON files and skips
+  completed `(task_id, trial)` pairs.
+- Stable checkpoint filenames in resume mode.
+- LiteLLM retry handling for retryable API errors and known header parsing
+  failures.
+- `run_with_budget.py` and `token_budget_manager.py` for OpenAI API key
+  rotation and per-key token limits.
+- Recorded result CSVs and checkpoint trajectories under `results/`.
 
-## Leaderboard
+## Environment setup
 
-### Airline
-
-| Strategy       | Pass^1 | Pass^2 | Pass^3 | Pass^4 |
-| -------------- | ------ | ------ | ------ | ------ |
-| [TC (claude-3-5-sonnet-20241022)](https://www.anthropic.com/news/3-5-models-and-computer-use)      | **0.460**     | **0.326**     | **0.263**     | **0.225**     |
-| [TC (gpt-4o)](https://platform.openai.com/docs/guides/function-calling)     | 0.420     | 0.273     | 0.220     | 0.200     |
-| [TC (claude-3-5-sonnet-20240620)](https://docs.anthropic.com/en/docs/build-with-claude/tool-use)      | 0.360     | 0.224     | 0.169     | 0.139     |
-| [TC (mistral-large-2407)](https://docs.mistral.ai/capabilities/function_calling/)     | ??     | ??     | ??     | ??     |
-| [TC (gpt-4o-mini)](https://platform.openai.com/docs/guides/function-calling)     | 0.225     | 0.140     | 0.110     | 0.100     |
-| [Act](https://arxiv.org/abs/2210.03629) (gpt-4o)     | 0.365 | 0.217 | 0.160 | 0.140     |
-| [ReAct](https://arxiv.org/abs/2210.03629) (gpt-4o)     | 0.325 | 0.233 | 0.185 | 0.160     |
-
-### Retail
-
-| Strategy       | Pass^1 | Pass^2 | Pass^3 | Pass^4 |
-| -------------- | ------ | ------ | ------ | ------ |
-| [TC (claude-3-5-sonnet-20241022)](https://www.anthropic.com/news/3-5-models-and-computer-use)      | **0.692**     | **0.576**     | **0.509**     | **0.462**     |
-| [TC (gpt-4o)](https://platform.openai.com/docs/guides/function-calling)     | 0.604     | 0.491     | 0.430     | 0.383     |
-| [TC (claude-3-5-sonnet-20240620)](https://docs.anthropic.com/en/docs/build-with-claude/tool-use)      | 0.626     | 0.506     | 0.435     | 0.387     |
-| [TC (mistral-large-2407)](https://docs.mistral.ai/capabilities/function_calling/)     | ??     | ??     | ??     | ??     |
-| [TC (gpt-4o-mini)](https://platform.openai.com/docs/guides/function-calling)     | ??     | ??     | ??     | ??     |
-| [Act](https://arxiv.org/abs/2210.03629) (gpt-4o)     | ??     | ??     | ??     | ??     |
-| [ReAct](https://arxiv.org/abs/2210.03629) (gpt-4o)     | ??     | ??     | ??     | ??     |
-
-*TC = `tool-calling` strategy (the function-calling strategy reported in the paper)
-
-## Setup
-
-1. Clone this repository:
+Use Python 3.10 or newer. The current workspace was checked with Python 3.11.7.
+Use a clean virtual environment; the shared user site on this machine contains
+other ML projects with incompatible dependency pins.
 
 ```bash
-git clone https://github.com/sierra-research/tau-bench && cd ./tau-bench
+cd tau-bench
+conda create -n tau-bench python=3.11
+conda activate tau-bench
+python -m pip install --upgrade pip
+python -m pip install -e .
 ```
 
-2. Install from source (which also installs required packages):
+There is no separate `requirements.txt`. Runtime dependencies are declared in
+`pyproject.toml`. The dependency list was migrated from `setup.py` and extended
+after scanning the current source imports:
+
+- Existing package requirements kept: `openai`, `mistralai`, `anthropic`,
+  `google-generativeai`, `tenacity`, `termcolor`, `numpy`, `litellm`
+- Missing direct imports now included: `pydantic`, `requests`, `tiktoken`,
+  `tqdm`
+- Runtime dependency observed through LiteLLM import: `tokenizers`
+
+## API keys
+
+Set the key for whichever provider you run through LiteLLM.
 
 ```bash
-pip install -e .
+export OPENAI_API_KEY=...
+export ANTHROPIC_API_KEY=...
+export GOOGLE_API_KEY=...
+export MISTRAL_API_KEY=...
 ```
 
-3. Set up your OpenAI / Anthropic / Google / Mistral / AnyScale API keys as environment variables.
+For token-budgeted OpenAI user simulation:
 
 ```bash
-OPENAI_API_KEY=...
-ANTHROPIC_API_KEY=...
-GOOGLE_API_KEY=...
-MISTRAL_API_KEY=...
+export OPENAI_API_KEYS=sk-key-1,sk-key-2
+export TOKEN_LIMIT_PER_KEY=2500000
+export TAU_RUN_MAX_ATTEMPTS=3
 ```
 
-## Run
+Set `TOKEN_LIMIT_PER_KEY=-1` to keep token accounting enabled without enforcing
+a per-key token limit.
 
-Run a tool-calling agent on the τ-retail environment:
+`run_with_budget.py` also accepts a `.openai_api_keys` file in the repository
+root, one key per line. The token usage state is written to
+`.token_usage.json`, which is ignored by git.
+
+## Run benchmark
+
+Basic English retail run:
 
 ```bash
-python run.py --agent-strategy tool-calling --env retail --model gpt-4o --model-provider openai --user-model gpt-4o --user-model-provider openai --user-strategy llm --max-concurrency 10
+python run.py \
+  --agent-strategy tool-calling \
+  --env retail \
+  --model gpt-4o \
+  --model-provider openai \
+  --user-model gpt-5-mini \
+  --user-model-provider openai \
+  --user-strategy llm \
+  --temperature 1 \
+  --locale en \
+  --max-concurrency 10
 ```
 
-Set max concurrency according to your API limit(s).
-
-To run specific tasks, use the `--task-ids` flag. For example:
+Traditional Chinese retail run:
 
 ```bash
-python run.py --agent-strategy tool-calling --env retail --model gpt-4o --model-provider openai --user-model gpt-4o --user-model-provider openai --user-strategy llm --max-concurrency 10 --task-ids 2 4 6
+python run.py \
+  --agent-strategy tool-calling \
+  --env retail \
+  --model gpt-4o \
+  --model-provider openai \
+  --user-model gpt-5-mini \
+  --user-model-provider openai \
+  --user-strategy llm \
+  --temperature 1 \
+  --locale zh-TW \
+  --max-concurrency 10
 ```
 
-This command will run only the tasks with IDs 2, 4, and 6.
+Airline uses the same flags with `--env airline`.
 
-## User simulators
-
-By default, we use `gpt-4o` as the user simulator with strategy `llm`. You can use other models by setting the `--user-model` flag, or other strategies by setting the `--user-strategy` flag. For example, run a tool-calling agent with a claude user simulator:
+Run only selected tasks:
 
 ```bash
-python run.py --agent-strategy tool-calling --env retail --model gpt-4o --model-provider openai --max-concurrency 10 --user-model claude-3-5-sonnet-20240620 --user-model-provider anthropic --user-strategy llm
+python run.py \
+  --agent-strategy tool-calling \
+  --env retail \
+  --model gpt-4o \
+  --model-provider openai \
+  --user-model gpt-5-mini \
+  --user-model-provider openai \
+  --user-strategy llm \
+  --temperature 1 \
+  --locale zh-TW \
+  --task-ids 2 4 6
 ```
 
-Other strategies:
-
-To run `react` user simulator:
+Resume an interrupted run and skip completed tasks:
 
 ```bash
-python run.py --agent-strategy tool-calling --env retail --model gpt-4o --model-provider openai --max-concurrency 10 --user-model gpt-4o --user-model-provider openai --user-strategy react
+python run.py \
+  --agent-strategy tool-calling \
+  --env retail \
+  --model gpt-4o \
+  --model-provider openai \
+  --user-model gpt-5-mini \
+  --user-model-provider openai \
+  --user-strategy llm \
+  --temperature 1 \
+  --locale zh-TW \
+  --log-dir results/my-run \
+  --resume
 ```
 
-Example of a `react` user response:
-
-```md
-Thought:
-I should provide my name and zip code as I wasn't given an email address to use.
-
-User Response:
-Sure, my name is Yusuf Rossi, and my zip code is 19122.
-```
-
-To run `verify` user simulator:
+Use the budget manager wrapper when using multiple OpenAI user-simulator keys:
 
 ```bash
-python run.py --agent-strategy tool-calling --env retail --model gpt-4o --model-provider openai --max-concurrency 10 --user-model gpt-4o --user-model-provider openai --user-strategy verify
+python run_with_budget.py \
+  --agent-strategy tool-calling \
+  --env retail \
+  --model gpt-4o \
+  --model-provider openai \
+  --user-model gpt-5-mini \
+  --user-model-provider openai \
+  --user-strategy llm \
+  --temperature 1 \
+  --locale zh-TW \
+  --max-concurrency 10 \
+  --resume
 ```
 
-This strategy uses a subsequent LLM verification step to check if the user simulator's response is satisfactory. If not, the user simulator will be prompted to generate a new response.
+Note: `gpt-5-mini` is guarded in `run.py` and `tau_bench/run.py`; it must run
+with `--temperature 1`.
 
-To run `reflection` user simulator:
+## Slurm batch example
 
-```bash
-python run.py --agent-strategy tool-calling --env retail --model gpt-4o --model-provider openai --max-concurrency 10 --user-model gpt-4o --user-model-provider openai --user-strategy reflection
+The repository includes `tau.slurm.example` as a ready-to-adapt Slurm/vLLM
+batch script. Edit the workspace/model paths, conda environment, OpenAI API
+keys, model list, and cluster resource settings near the top of the file, then
+run it with `sbatch tau.slurm.example`.
+
+## Output layout
+
+Benchmark runs write checkpoint JSON files to `--log-dir`:
+
+```text
+results/<model>/<env>_<locale>_<strategy>/
 ```
 
-This strategy uses a subsequent LLM verification step to check if the user simulator's response is satisfactory. If not, the user simulator will be prompted to reflect on its response and generate a new response.
+Each checkpoint item includes:
+
+- `task_id`
+- `reward`
+- `info`
+- `traj`
+- `trial`
+
+The committed summary CSVs are:
+
+- `results/Gpt-oss-20b.csv`
+- `results/Llama-3.1-8B-Instruct.csv`
+- `results/Llama-xLAM-2-8b-fc-r.csv`
+- `results/Gemma-4-26B-A4B-it.csv`
+- `results/Gemma-4-31B-it.csv`
+- `results/Qwen3.5-35B-A3B.csv`
 
 ## Auto error identification
 
-Often times, it is difficult and time consuming to manually identify specific error locations in trajectories as they can be long and the constraints can be complex. We have provided an auto error identification tool that can do the following:
-
-1. Fault assignment: determine the entity that is responsible for the fault (user, agent, environment)
-2. Fault type classification: classify the type of fault (goal_partially_completed, used_wrong_tool, used_wrong_tool_argument, took_unintended_action)
-
-Both of the labels are accompanied with a description.
-
-To run the auto error identification, run:
-
 ```bash
-python auto_error_identification.py --env <airline/retail> --platform openai --results-path <the path to your results file here> --max-concurrency 16 --output-path test-auto-error-identification --max-num-failed-results 10
+python auto_error_identification.py \
+  --env retail \
+  --platform openai \
+  --model gpt-4o \
+  --results-path results/path/to/checkpoint.json \
+  --max-concurrency 16 \
+  --output-path error-analysis.json \
+  --max-num-failed-results 10
 ```
 
-Please note that this feature utilizes an LLM, which may lead to inaccurate error identifications.
+This feature uses an LLM and should be treated as an assisted analysis tool,
+not ground truth.
 
-*Notice: If an error is raised due to the structure of your results file, you may have to rerun the benchmark to produce a new results file. We have recently [rewritten](https://github.com/sierra-research/tau-bench/commit/043b544371757ebb3762b3d02a6675dfe0c41798) the benchmark to be more type-safe and extensible.
+## Important files
 
-## Historical trajectories
+- `run.py`: command-line parser and benchmark entrypoint.
+- `tau_bench/run.py`: main benchmark loop, checkpointing, resume behavior, and
+  pass^k metric display.
+- `tau_bench/envs/`: retail and airline environment definitions, tools, tasks,
+  and user simulator.
+- `tau_bench/localization.py`: applies file-based locale overrides.
+- `tau_bench/locales/zh-TW/`: Traditional Chinese localized tasks, tools,
+  wiki, rules, and shared prompts.
+- `tau_bench/litellm_retry.py`: retry wrapper for LiteLLM calls.
+- `run_with_budget.py`: wrapper around `run.py` with token budget management.
+- `token_budget_manager.py`: LiteLLM callback for OpenAI token accounting and
+  key rotation.
+- `tau.slurm.example`: editable Slurm/vLLM batch-run template.
+- `scripts/translate_file_locale.py`: translation utility used to generate or
+  repair localized files.
+- `results/`: committed summary CSVs and checkpoint trajectories.
+- `HANDOVER.md`: project handover notes and completed work summary.
 
-τ-bench might be expensive to run. We have provided a set of historical trajectories for the airline and retail environments in `./historical_trajectories`.
-
-If you would like to contribute your historical trajectories to this benchmark, please submit a PR!
-
-## License
-
-See `./LICENSE`.
-
-## Contact
-
-Please submit issues or pull requests if you find problems with the benchmark.
-
-## Citation
+## Original citation
 
 ```bibtex
 @misc{yao2024tau,
-      title={$\tau$-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains}, 
+      title={$\tau$-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains},
       author={Shunyu Yao and Noah Shinn and Pedram Razavi and Karthik Narasimhan},
       year={2024},
       eprint={2406.12045},
       archivePrefix={arXiv},
       primaryClass={cs.AI},
-      url={https://arxiv.org/abs/2406.12045}, 
+      url={https://arxiv.org/abs/2406.12045},
 }
 @misc{barres2025tau2,
-      title={$\tau^2$-Bench: Evaluating Conversational Agents in a Dual-Control Environment}, 
+      title={$\tau^2$-Bench: Evaluating Conversational Agents in a Dual-Control Environment},
       author={Victor Barres and Honghua Dong and Soham Ray and Xujie Si and Karthik Narasimhan},
       year={2025},
       eprint={2506.07982},
       archivePrefix={arXiv},
       primaryClass={cs.AI},
-      url={https://arxiv.org/abs/2506.07982}, 
+      url={https://arxiv.org/abs/2506.07982},
 }
 ```

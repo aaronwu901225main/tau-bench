@@ -1,2 +1,3 @@
 recursive-include tau_bench *.json
 recursive-include tau_bench *.md
+recursive-include tau_bench *.txt

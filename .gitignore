@@ -5,7 +5,6 @@ __pycache__/
 *.out
 *.slurm
 .token_usage.json
-tau_translate.sh
 *.log
 scripts/translation_api_usage_daily.json
 scripts/translation_api_usage_daily.json.lock

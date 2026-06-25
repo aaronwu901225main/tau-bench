@@ -1,0 +1,397 @@
+# ── 修正 flashinfer JIT 編譯找不到 libcuda.so 的問題(若沒有請移除此段落) ────────
+# libcuda.so stub 在 conda env 的 lib/stubs/ 目錄
+export LIBRARY_PATH="${CONDA_PREFIX}/lib/stubs:${LIBRARY_PATH:-}"
+# 清除之前可能失敗的 flashinfer JIT cache
+rm -rf ~/.cache/flashinfer/
+
+# GPT-OSS 在目前環境下用 BFCL 同款設定較穩定
+export VLLM_USE_FLASHINFER_SAMPLER=0
+unset VLLM_ATTENTION_BACKEND || true
+# ── 設定 ────────────────────────────────────────────────────
+VLLM_PORT=8001
+VLLM_HOST="http://localhost:${VLLM_PORT}/v1"
+WORKSPACE="/path/to/workspace" # 實際使用時請修改為你的工作目錄，應包含 tau-bench/ 子目錄
+TAU_DIR="${WORKSPACE}/tau-bench"
+MODEL_DIR="${WORKSPACE}/models" # 模型存放的根目錄，裡面應該有各個模型的子目錄，每個子目錄是 Hugging Face Transformers 格式的模型資料夾
+
+# ── OpenAI API keys（user simulator 用 gpt-5-mini）──────────
+# 多把 key 用逗號分隔，每把每天 2.5M tokens
+# 快達上限時自動切換下一把，全部用完時中止
+OPENAI_API_KEYS=""
+OPENAI_API_KEYS+=",sk-......." # 這裡請填入你的 API key，逗號分隔多把
+
+export OPENAI_API_KEYS
+# 每把 key 的 token 上限（每日）
+export TOKEN_LIMIT_PER_KEY=248500
+
+# ── LiteLLM / run 重試設定 ───────────────────────────────────
+# 單次 completion 的最大嘗試次數與退避
+export TAU_LITELLM_MAX_ATTEMPTS=8
+# header 汙染錯誤專用(gpt-oss)；0 代表不設上限，直到該輪成功
+export TAU_LITELLM_HEADER_MAX_ATTEMPTS=0
+export TAU_LITELLM_RETRY_BACKOFF=1.5
+export TAU_LITELLM_RETRY_MAX_BACKOFF=25
+# run_with_budget.py 外層整體重試次數
+export TAU_RUN_MAX_ATTEMPTS=4
+
+NUM_TRIALS=4
+MAX_CONCURRENCY=1
+TASK_SPLIT="test"
+LOCALES=("zh-TW" "en")
+USER_MODEL="gpt-4o"
+USER_PROVIDER="openai"
+USER_STRATEGY="llm"
+AGENT_TEMPERATURE="1"
+
+# ── 要測試的模型清單 ─────────────────────────────────────────
+# 格式: "模型路徑|顯示名稱|tool_call_parser|request_model_name|profile"
+# profile 可用值:
+# - default: 一般模型
+# - gptoss: 使用 BFCL 同款推論參數（openai parser + reasoning parser）
+MODELS=(
+  "${MODEL_DIR}/gemma-4-31B-it|Gemma-4-31B-it|gemma4|${MODEL_DIR}/gemma-4-31B-it|gemma4"
+  # "${MODEL_DIR}/gemma-4-26B-A4B-it|Gemma-4-26B-A4B-it|gemma4|${MODEL_DIR}/gemma-4-26B-A4B-it|gemma4"
+  # "${MODEL_DIR}/Qwen3.5-35B-A3B|Qwen3.5-35B-A3B|qwen3_coder|${MODEL_DIR}/Qwen3.5-35B-A3B|Qwen3.5"
+  # "${MODEL_DIR}/gpt-oss-20b|gpt-oss-20b|openai|openai/gpt-oss-20b|gptoss"
+  # "${MODEL_DIR}/Llama-3.1-8B-Instruct|Llama-3.1-8B-Instruct|llama3_json|${MODEL_DIR}/Llama-3.1-8B-Instruct|default"
+  # "${MODEL_DIR}/Llama-xLAM-2-8b-fc-r|Llama-xLAM-2-8b-fc-r|xlam|${MODEL_DIR}/Llama-xLAM-2-8b-fc-r|default"
+)
+# 若要自動解析 model config 的 max-model-len，設為 1
+AUTO_DETECT_MAX_MODEL_LEN=0
+
+# ── 要測試的 env + strategy 組合 ──────────────────────────────
+ENVS=("retail" "airline")
+STRATEGIES=("tool-calling")
+
+# ── 輔助函式 ─────────────────────────────────────────────────
+wait_for_vllm() {
+  local url="$1"
+  local max_wait=1800  # 最多等 10 分鐘
+  local waited=0
+  echo "⏳ 等待 vLLM server 啟動 (${url}) ..."
+  while ! curl -s "${url}/models" > /dev/null 2>&1; do
+    sleep 5
+    waited=$((waited + 5))
+    if [ $waited -ge $max_wait ]; then
+      echo "❌ vLLM server 啟動逾時 (${max_wait}s)，跳過此模型"
+      return 1
+    fi
+  done
+  echo "✅ vLLM server 已就緒 (等待了 ${waited}s)"
+  return 0
+}
+
+kill_vllm() {
+  if [ -n "${VLLM_PID:-}" ]; then
+    echo "🔄 關閉 vLLM server (PID: ${VLLM_PID}) ..."
+    kill "$VLLM_PID" 2>/dev/null || true
+    wait "$VLLM_PID" 2>/dev/null || true
+    unset VLLM_PID
+    sleep 5
+  fi
+}
+
+resolve_model_max_len() {
+  local model_path="$1"
+  local config_path="${model_path}/config.json"
+  local tokenizer_config_path="${model_path}/tokenizer_config.json"
+
+  python - "$config_path" "$tokenizer_config_path" <<'PY'
+import json
+import math
+import sys
+
+cfg_path, tok_path = sys.argv[1], sys.argv[2]
+
+
+def load_json(path):
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+cfg = load_json(cfg_path)
+tok = load_json(tok_path)
+values = []
+
+
+def add_value(v):
+    if isinstance(v, bool):
+        return
+    if isinstance(v, (int, float)) and math.isfinite(v):
+        n = int(v)
+        # 避免把 tokenizer 常見的超大 sentinel 值當作有效 context 長度
+        if 0 < n < 10_000_000:
+            values.append(n)
+
+
+for key in (
+    "max_position_embeddings",
+    "n_positions",
+    "seq_length",
+    "max_seq_len",
+    "max_sequence_length",
+    "model_max_length",
+):
+    add_value(cfg.get(key))
+
+add_value(tok.get("model_max_length"))
+
+rope = cfg.get("rope_scaling")
+if isinstance(rope, dict):
+    factor = rope.get("factor")
+    if isinstance(factor, (int, float)) and factor > 1:
+        base = rope.get("original_max_position_embeddings")
+        if not isinstance(base, (int, float)):
+            base = (
+                cfg.get("max_position_embeddings")
+                or cfg.get("n_positions")
+                or cfg.get("seq_length")
+            )
+        if isinstance(base, (int, float)) and base > 0:
+            add_value(int(base * factor))
+
+if values:
+    print(max(values))
+PY
+}
+
+# 確保結束時清理 vLLM
+trap kill_vllm EXIT
+
+# ── 結果 CSV 初始化 ──────────────────────────────────────────
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+CSV_FILE="${TAU_DIR}/results/summary_${TIMESTAMP}.csv"
+mkdir -p "${TAU_DIR}/results"
+echo "model,env,locale,pass_k1,pass_k2,pass_k3,pass_k4" > "${CSV_FILE}"
+echo "📊 結果將儲存到: ${CSV_FILE}"
+
+round_metric() {
+  local value="${1:-}"
+  if [ -z "${value}" ]; then
+    printf "N/A"
+    return
+  fi
+  awk -v value="${value}" 'BEGIN {
+    if (value ~ /^-?[0-9]+([.][0-9]+)?([eE][-+]?[0-9]+)?$/) {
+      printf "%.2f", value + 0
+    } else {
+      printf "%s", value
+    }
+  }'
+}
+
+# 從 run.log 擷取指標的函式
+parse_metrics() {
+  local log_file="$1"
+  PASS_K1=$(round_metric "$(grep -oP 'k=1:\s*\K[0-9.]+' "$log_file" | tail -1)")
+  PASS_K2=$(round_metric "$(grep -oP 'k=2:\s*\K[0-9.]+' "$log_file" | tail -1)")
+  PASS_K3=$(round_metric "$(grep -oP 'k=3:\s*\K[0-9.]+' "$log_file" | tail -1)")
+  PASS_K4=$(round_metric "$(grep -oP 'k=4:\s*\K[0-9.]+' "$log_file" | tail -1)")
+  # 缺值時填 N/A
+  : "${PASS_K1:=N/A}" "${PASS_K2:=N/A}" "${PASS_K3:=N/A}" "${PASS_K4:=N/A}"
+}
+
+# 最終彙總表格
+print_summary() {
+  echo ""
+  echo "╔══════════════════════════════════════════════════════════════════════════════════════╗"
+  echo "║  🎉 全部測試完成！結果彙總                                                         ║"
+  echo "╠══════════════════════════════════════════════════════════════════════════════════════╣"
+  echo ""
+  if [ -f "${CSV_FILE}" ]; then
+    # 用 column 格式化 CSV 成對齊表格
+    column -t -s',' "${CSV_FILE}"
+    echo ""
+    echo "📂 CSV 儲存於: ${CSV_FILE}"
+    echo "📁 詳細結果: results/ 目錄"
+  else
+    echo "⚠️  找不到結果 CSV 檔案"
+  fi
+  echo ""
+  echo "╚══════════════════════════════════════════════════════════════════════════════════════╝"
+}
+
+# ── 主迴圈：逐模型測試 ───────────────────────────────────────
+cd "${TAU_DIR}"
+
+# 若要跑 zh-TW，需先由獨立翻譯流程產生 locale 檔
+if printf '%s\n' "${LOCALES[@]}" | grep -qx "zh-TW"; then
+  if [ ! -f "${TAU_DIR}/tau_bench/locales/zh-TW/retail/meta.json" ] || \
+     [ ! -f "${TAU_DIR}/tau_bench/locales/zh-TW/airline/meta.json" ] || \
+     [ ! -f "${TAU_DIR}/tau_bench/locales/zh-TW/retail/tasks_test.json" ] || \
+     [ ! -f "${TAU_DIR}/tau_bench/locales/zh-TW/airline/tasks_test.json" ]; then
+    echo "❌ 找不到 zh-TW locale 檔案，請先執行翻譯批次：bash tau_translate.sh --bg"
+    exit 1
+  fi
+fi
+
+for model_entry in "${MODELS[@]}"; do
+  IFS='|' read -r MODEL_PATH MODEL_NAME TOOL_PARSER REQUEST_MODEL_NAME MODEL_PROFILE <<< "$model_entry"
+
+  # 舊格式相容: 未提供 request_model_name/profile 時回退到預設值
+  REQUEST_MODEL_NAME="${REQUEST_MODEL_NAME:-${MODEL_PATH}}"
+  MODEL_PROFILE="${MODEL_PROFILE:-default}"
+
+  echo ""
+  echo "╔══════════════════════════════════════════════════════════╗"
+  echo "║  模型: ${MODEL_NAME}"
+  echo "╚══════════════════════════════════════════════════════════╝"
+
+  if [ ! -d "${MODEL_PATH}" ]; then
+    echo "❌ 找不到模型路徑: ${MODEL_PATH}"
+    echo "⚠️  跳過模型 ${MODEL_NAME}"
+    continue
+  fi
+
+  if [ ! -f "${MODEL_PATH}/config.json" ]; then
+    echo "❌ 找不到模型設定檔: ${MODEL_PATH}/config.json"
+    echo "⚠️  跳過模型 ${MODEL_NAME}"
+    continue
+  fi
+
+  # ── 關閉前一個 vLLM（如果有的話）──
+  kill_vllm
+
+  # profile 決定 vLLM 啟動參數
+  PROFILE_FALLBACK_MAX_MODEL_LEN="16384"
+  VLLM_DTYPE="auto"
+  VLLM_NEED_TRUST_REMOTE_CODE=0
+  VLLM_REASONING_PARSER=""
+
+  if [ "${MODEL_PROFILE}" = "gptoss" ]; then
+    PROFILE_FALLBACK_MAX_MODEL_LEN="131072"
+    VLLM_DTYPE="bfloat16"
+    VLLM_NEED_TRUST_REMOTE_CODE=1
+    VLLM_REASONING_PARSER="openai_gptoss"
+  fi
+
+  if [ "${MODEL_PROFILE}" = "Qwen3.5" ]; then
+    VLLM_REASONING_PARSER="qwen3"
+    PROFILE_FALLBACK_MAX_MODEL_LEN="131072"
+    
+  fi
+
+  if [ "${MODEL_PROFILE}" = "gemma4" ]; then
+    VLLM_REASONING_PARSER="gemma4"
+    PROFILE_FALLBACK_MAX_MODEL_LEN="131072"
+  fi
+
+  if [ "${AUTO_DETECT_MAX_MODEL_LEN}" = "1" ]; then
+    VLLM_MAX_MODEL_LEN="$(resolve_model_max_len "${MODEL_PATH}")"
+    if [ -z "${VLLM_MAX_MODEL_LEN}" ]; then
+      VLLM_MAX_MODEL_LEN="${PROFILE_FALLBACK_MAX_MODEL_LEN}"
+      echo "⚠️  無法從 config 解析 max-model-len，回退使用: ${VLLM_MAX_MODEL_LEN}"
+    else
+      echo "🔎 從 config 解析 max-model-len: ${VLLM_MAX_MODEL_LEN}"
+    fi
+  else
+    VLLM_MAX_MODEL_LEN="${PROFILE_FALLBACK_MAX_MODEL_LEN}"
+    echo "ℹ️  自動偵測 max-model-len 關閉，使用: ${VLLM_MAX_MODEL_LEN}"
+  fi
+
+  # ── 啟動 vLLM server ──
+  VLLM_CMD=(
+    python -m vllm.entrypoints.openai.api_server
+    --model "${MODEL_PATH}"
+    --served-model-name "${REQUEST_MODEL_NAME}"
+    --port "${VLLM_PORT}"
+    --tensor-parallel-size 1
+    --dtype "${VLLM_DTYPE}"
+    --max-model-len "${VLLM_MAX_MODEL_LEN}"
+    --gpu-memory-utilization 0.90
+    --enable-auto-tool-choice
+    --tool-call-parser "${TOOL_PARSER}"
+    --gdn-prefill-backend triton
+  )
+
+  if [ -n "${VLLM_REASONING_PARSER}" ]; then
+    VLLM_CMD+=(--reasoning-parser "${VLLM_REASONING_PARSER}")
+  fi
+
+  if [ "${VLLM_NEED_TRUST_REMOTE_CODE}" -eq 1 ]; then
+    VLLM_CMD+=(--trust-remote-code)
+  fi
+
+  # xLAM 需要額外指定自訂 parser 的路徑
+  if [ "${TOOL_PARSER}" = "xlam" ]; then
+    VLLM_CMD+=(--tool-parser-plugin "${MODEL_DIR}/Llama-xLAM-2-8b-fc-r/xlam_tool_call_parser.py")
+  fi
+
+  echo "🚀 啟動 vLLM: ${VLLM_CMD[*]}"
+  "${VLLM_CMD[@]}" > "vllm_${MODEL_NAME}.log" 2>&1 &
+  VLLM_PID=$!
+
+  if ! wait_for_vllm "${VLLM_HOST}"; then
+    echo "⚠️  跳過模型 ${MODEL_NAME}"
+    kill_vllm
+    continue
+  fi
+
+  # ── 設定 litellm 指向本地 vLLM ──
+  export HOSTED_VLLM_API_BASE="${VLLM_HOST}"
+  export HOSTED_VLLM_API_KEY="dummy"
+
+  # ── 對每個 env + locale + strategy 組合執行測試 ──
+  for ENV in "${ENVS[@]}"; do
+    for LOCALE in "${LOCALES[@]}"; do
+      for STRATEGY in "${STRATEGIES[@]}"; do
+      echo ""
+      echo "────────────────────────────────────────────────────"
+      echo "  🧪 測試: ${MODEL_NAME} | env=${ENV} | locale=${LOCALE} | strategy=${STRATEGY}"
+      echo "────────────────────────────────────────────────────"
+
+      LOG_DIR="results/${MODEL_NAME}/${ENV}_${LOCALE}_${STRATEGY}"
+      mkdir -p "${LOG_DIR}"
+
+      python run_with_budget.py \
+        --resume \
+        --agent-strategy "${STRATEGY}" \
+        --env "${ENV}" \
+        --locale "${LOCALE}" \
+        --model "${REQUEST_MODEL_NAME}" \
+        --model-provider "hosted_vllm" \
+        --user-model "${USER_MODEL}" \
+        --user-model-provider "${USER_PROVIDER}" \
+        --user-strategy "${USER_STRATEGY}" \
+        --num-trials "${NUM_TRIALS}" \
+        --max-concurrency "${MAX_CONCURRENCY}" \
+        --task-split "${TASK_SPLIT}" \
+        --temperature "${AGENT_TEMPERATURE}" \
+        --log-dir "${LOG_DIR}" \
+        2>&1 | tee "${LOG_DIR}/run.log"
+      EXIT_CODE=${PIPESTATUS[0]}
+
+      if [ $EXIT_CODE -ne 0 ]; then
+        echo "⚠️  run_with_budget.py 退出碼: ${EXIT_CODE}"
+        if [ $EXIT_CODE -eq 42 ]; then
+          echo "🚨 API key 額度全部用完，中止所有測試"
+          kill_vllm
+          # 結束前印出已收集的結果
+          print_summary
+          exit 1
+        fi
+        # 一般錯誤（RateLimitError 等）印警告但繼續下一個測試
+        echo "⚠️  測試失敗但繼續下一個組合..."
+      fi
+
+      # ── 擷取指標並寫入 CSV ──
+      RUN_LOG="${LOG_DIR}/run.log"
+      if [ -f "${RUN_LOG}" ]; then
+        parse_metrics "${RUN_LOG}"
+        echo "${MODEL_NAME},${ENV},${LOCALE},${PASS_K1},${PASS_K2},${PASS_K3},${PASS_K4}" >> "${CSV_FILE}"
+      fi
+
+      echo "✅ 完成: ${MODEL_NAME} | ${ENV} | ${LOCALE} | ${STRATEGY}"
+      done
+    done
+  done
+
+  echo ""
+  echo "🏁 模型 ${MODEL_NAME} 全部測試完成"
+done
+
+kill_vllm
+print_summary

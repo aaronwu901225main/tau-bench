@@ -3,6 +3,7 @@ OpenAI API Key 輪替與 Token 預算管理器。
 透過 litellm callback 追蹤每個 API key 的 token 使用量，
 在達到每日上限時自動切換到下一個 key，
 所有 key 額度用完時中止程式以避免計費。
+若 token limit 設為 -1，則只追蹤用量，不限制額度。
 
 支援持久化：將用量儲存到 JSON 檔案，下次啟動時恢復，
 避免因 job 重啟而重置已使用的額度。
@@ -22,6 +23,7 @@ from litellm.integrations.custom_logger import CustomLogger
 # 持久化檔案位置
 DEFAULT_USAGE_FILE = os.path.join(os.path.dirname(__file__), ".token_usage.json")
 DEFAULT_TOKEN_LIMIT_PER_KEY = 2_500_000
+UNLIMITED_TOKEN_LIMIT = -1
 
 
 class TokenBudgetManager(CustomLogger):
@@ -49,9 +51,10 @@ class TokenBudgetManager(CustomLogger):
         self._load_usage()
 
         # 找到第一把還有額度的 key
-        while (self.current_key_idx < len(self.api_keys) and
-               self.usage_per_key[self.api_keys[self.current_key_idx]] >= self.token_limit):
-            self.current_key_idx += 1
+        if not self.is_unlimited:
+            while (self.current_key_idx < len(self.api_keys) and
+                   self.usage_per_key[self.api_keys[self.current_key_idx]] >= self.token_limit):
+                self.current_key_idx += 1
 
         if self.current_key_idx >= len(self.api_keys):
             self._exhausted = True
@@ -64,6 +67,10 @@ class TokenBudgetManager(CustomLogger):
     @property
     def is_exhausted(self) -> bool:
         return self._exhausted
+
+    @property
+    def is_unlimited(self) -> bool:
+        return self.token_limit == UNLIMITED_TOKEN_LIMIT
 
     def _mask_key(self, key: str) -> str:
         if len(key) <= 12:
@@ -101,7 +108,10 @@ class TokenBudgetManager(CustomLogger):
             if saved_date is None:
                 # 舊格式沒有日期欄位，無法判斷是否同一天
                 # 如果所有 key 都已超過上限，很可能是舊的一天，安全起見重置
-                all_over = all(data.get(k, 0) >= self.token_limit for k in self.api_keys if k in data)
+                all_over = (
+                    not self.is_unlimited
+                    and all(data.get(k, 0) >= self.token_limit for k in self.api_keys if k in data)
+                )
                 if all_over and len([k for k in self.api_keys if k in data]) > 0:
                     print(f"[TokenBudget] 🔄 用量紀錄無日期且所有 key 已滿，視為新的一天，重置額度")
                     self._save_usage()
@@ -132,17 +142,25 @@ class TokenBudgetManager(CustomLogger):
     def _print_status(self, event: str = "") -> None:
         key = self.api_keys[self.current_key_idx]
         used = self.usage_per_key.get(key, 0)
-        remaining = self.token_limit - used
+        if self.is_unlimited:
+            limit_display = "無上限"
+            remaining_display = "無上限"
+        else:
+            limit_display = f"{self.token_limit:,}"
+            remaining_display = f"{self.token_limit - used:,}"
         print(
             f"[TokenBudget] {event} | "
             f"Key #{self.current_key_idx + 1}/{len(self.api_keys)} "
             f"({self._mask_key(key)}) | "
-            f"已用: {used:,} / {self.token_limit:,} tokens | "
-            f"剩餘: {remaining:,} tokens"
+            f"已用: {used:,} / {limit_display} tokens | "
+            f"剩餘: {remaining_display} tokens"
         )
 
     def _rotate_key(self) -> None:
         """切換到下一個 API key，若全部用完則中止。"""
+        if self.is_unlimited:
+            return
+
         old_idx = self.current_key_idx
         self.current_key_idx += 1
         self._save_usage()  # 切換前先存檔
@@ -197,7 +215,7 @@ class TokenBudgetManager(CustomLogger):
                 self._save_usage()
 
             # 檢查是否超過額度
-            if self.usage_per_key[current_key] >= self.token_limit:
+            if not self.is_unlimited and self.usage_per_key[current_key] >= self.token_limit:
                 self._rotate_key()
 
     def get_summary(self) -> str:
@@ -208,9 +226,10 @@ class TokenBudgetManager(CustomLogger):
         for i, key in enumerate(self.api_keys):
             used = self.usage_per_key[key]
             marker = " ◀ 目前" if i == self.current_key_idx else ""
+            limit_display = "無上限" if self.is_unlimited else f"{self.token_limit:,}"
             lines.append(
                 f"  Key #{i + 1} ({self._mask_key(key)}): "
-                f"{used:,} / {self.token_limit:,} tokens{marker}"
+                f"{used:,} / {limit_display} tokens{marker}"
             )
         lines.append(f"  總計: {self.total_openai_tokens:,} tokens")
         lines.append("-" * 50)
@@ -241,13 +260,13 @@ def setup_budget_manager(
                 token_limit = int(token_limit_env)
             except ValueError as exc:
                 raise ValueError(
-                    f"TOKEN_LIMIT_PER_KEY 必須是正整數，收到: {token_limit_env}"
+                    f"TOKEN_LIMIT_PER_KEY 必須是正整數或 -1，收到: {token_limit_env}"
                 ) from exc
         else:
             token_limit = DEFAULT_TOKEN_LIMIT_PER_KEY
 
-    if token_limit <= 0:
-        raise ValueError(f"token_limit 必須是正整數，收到: {token_limit}")
+    if token_limit != UNLIMITED_TOKEN_LIMIT and token_limit <= 0:
+        raise ValueError(f"token_limit 必須是正整數或 -1，收到: {token_limit}")
 
     if api_keys is None:
         # 嘗試從環境變數讀取
@@ -278,5 +297,8 @@ def setup_budget_manager(
 
     manager = TokenBudgetManager(api_keys=api_keys, token_limit_per_key=token_limit)
     litellm.callbacks = [manager]
-    print(f"[TokenBudget] 已註冊 {len(api_keys)} 把 API key，每把額度 {token_limit:,} tokens")
+    if token_limit == UNLIMITED_TOKEN_LIMIT:
+        print(f"[TokenBudget] 已註冊 {len(api_keys)} 把 API key，每把額度無上限")
+    else:
+        print(f"[TokenBudget] 已註冊 {len(api_keys)} 把 API key，每把額度 {token_limit:,} tokens")
     return manager

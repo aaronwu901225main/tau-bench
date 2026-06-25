@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tau_bench"
+version = "0.1.0"
+description = "The Tau-Bench package"
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+dependencies = [
+    "anthropic>=0.26.1",
+    "google-generativeai>=0.5.4",
+    "litellm>=1.41.0",
+    "mistralai>=0.4.0",
+    "numpy>=1.26.4",
+    "openai>=1.13.3",
+    "pydantic>=2.5.0",
+    "requests>=2.31.0",
+    "tenacity>=8.3.0",
+    "termcolor>=2.4.0",
+    "tiktoken>=0.7.0",
+    "tokenizers>=0.15.0",
+    "tqdm>=4.66.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["tau_bench*"]
+
+[tool.setuptools.package-data]
+tau_bench = ["**/*.json", "**/*.md", "**/*.txt"]

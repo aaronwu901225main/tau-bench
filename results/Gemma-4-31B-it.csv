@@ -1,5 +1,5 @@
-model,env,locale,strategy,avg_reward,pass_k1,pass_k2,pass_k3,pass_k4,status
-Gemma-4-31B-it,retail,zh-TW,tool-calling,0.6456521739130435,0.6456521739130435,0.5289855072463767,0.46304347826086956,0.41739130434782606,ok
-Gemma-4-31B-it,retail,en,tool-calling,0.741304347826087,0.741304347826087,0.6434782608695654,0.5826086956521739,0.5391304347826087,ok
-Gemma-4-31B-it,airline,zh-TW,tool-calling,0.485,0.485,0.37,0.315,0.28,ok
-Gemma-4-31B-it,airline,en,tool-calling,0.5,0.5,0.41666666666666674,0.375,0.34,ok
+model,env,locale,pass_k1,pass_k2,pass_k3,pass_k4
+Gemma-4-31B-it,retail,zh-TW,64.57%,52.90%,46.30%,41.74%
+Gemma-4-31B-it,retail,en,74.13%,64.35%,58.26%,53.91%
+Gemma-4-31B-it,airline,zh-TW,48.50%,37.00%,31.50%,28.00%
+Gemma-4-31B-it,airline,en,50.00%,41.67%,37.50%,34.00%
