@@ -57,7 +57,7 @@ MODELS=(
   # "${MODEL_DIR}/Llama-xLAM-2-8b-fc-r|Llama-xLAM-2-8b-fc-r|xlam|${MODEL_DIR}/Llama-xLAM-2-8b-fc-r|default"
 )
 # 若要自動解析 model config 的 max-model-len，設為 1
-AUTO_DETECT_MAX_MODEL_LEN=0
+AUTO_DETECT_MAX_MODEL_LEN=1
 
 # ── 要測試的 env + strategy 組合 ──────────────────────────────
 ENVS=("retail" "airline")
