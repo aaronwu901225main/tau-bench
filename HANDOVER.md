@@ -18,33 +18,6 @@ upstream https://github.com/sierra-research/tau-bench.git
 main -> origin/main
 ```
 
-## 最近本地修改脈絡
-
-本 fork 從 upstream `59a200c` 之後加入本地 commit：
-
-- `d65e850 初測英文版成功`
-  - 新增 `run_with_budget.py`、`token_budget_manager.py`
-  - 新增 LiteLLM retry wrapper
-  - 調整 benchmark run loop、temperature、checkpoint 與初步英文測試流程
-- `fe39c08 繁體中文化與部分測試`
-  - 新增 `--locale`
-  - 新增 `tau_bench/localization.py`
-  - 新增 `tau_bench/locales/zh-TW/` 的 airline/retail 任務、工具、wiki、rules、shared prompts
-  - 新增多個 gpt-oss、Llama 系列英文/繁中 checkpoint 與 summary CSV
-- `b4c4f19 Gemma result`
-  - 新增 Gemma-4-31B-it 與部分 gpt-oss / Qwen3.5 繁中結果
-  - 將 `results/gpt-oss-20b.csv` rename 成 `results/Gpt-oss-20b.csv`
-- `a061b81 Gemma 4 all and Qwen3.5 result`
-  - 新增 Gemma-4-26B-A4B-it、Gemma-4-31B-it、Qwen3.5-35B-A3B 的英文/繁中 airline/retail checkpoint 與 summary CSV
-
-本次交接整理新增或調整：
-
-- 新增 `pyproject.toml`，把 packaging metadata 從 `setup.py` 移到 PEP 621 格式
-- 刪除舊 `setup.py`，避免 dependency metadata 有兩份來源
-- 更新 `MANIFEST.in`，補上 locale shared prompt 的 `*.txt`
-- 重寫 `README.md` 的環境安裝、API key、執行、resume、budget wrapper 與結果位置說明
-- 新增本文件 `HANDOVER.md`
-
 ## 已完成項目
 
 - 保留完整 git history 與 upstream remote。
