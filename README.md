@@ -165,13 +165,6 @@ python run_with_budget.py \
 Note: `gpt-5-mini` is guarded in `run.py` and `tau_bench/run.py`; it must run
 with `--temperature 1`.
 
-## Slurm batch example
-
-The repository includes `tau.slurm.example` as a ready-to-adapt Slurm/vLLM
-batch script. Edit the workspace/model paths, conda environment, OpenAI API
-keys, model list, and cluster resource settings near the top of the file, then
-run it with `sbatch tau.slurm.example`.
-
 ## Output layout
 
 Benchmark runs write checkpoint JSON files to `--log-dir`:
